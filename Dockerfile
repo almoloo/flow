@@ -1,24 +1,40 @@
-# Use official Node.js 20 image as the base
-FROM node:20
+FROM node:20-alpine AS base
 
-# Install Python 3 and build tools for native modules
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the application code
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the Next.js app
+
 RUN npm run build
 
-# Expose the port your app runs on (change if needed)
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
 
-# Start the app (adjust if your start command is different)
+ENV PORT=3000
+
 CMD ["npm", "start"]
