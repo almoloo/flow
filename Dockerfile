@@ -4,7 +4,7 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 COPY package*.json ./
-RUN npm install 
+RUN npm ci
 
 FROM base AS builder
 WORKDIR /app
