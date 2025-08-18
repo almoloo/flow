@@ -1,3 +1,4 @@
+import { MONGODB_DB_NAME, MONGODB_URI } from "@/constants";
 import { MongoClient, Db, Collection, Document } from "mongodb";
 
 declare global {
@@ -16,15 +17,14 @@ class MongoDB {
   private db: Db | null = null;
 
   private constructor() {
-    if (!process.env.MONGODB_URI) {
+    if (!MONGODB_URI) {
       throw new Error("Please define the MONGODB_URI environment variable inside .env");
     }
 
-    if (!process.env.MONGODB_DB_NAME) {
+    if (!MONGODB_DB_NAME) {
       throw new Error("Please define the MONGODB_DB_NAME environment variable inside .env");
     }
 
-    const uri = process.env.MONGODB_URI;
     const options = {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
@@ -33,12 +33,12 @@ class MongoDB {
 
     if (process.env.NODE_ENV === "development") {
       if (!global._mongoClientPromise) {
-        this.client = new MongoClient(uri, options);
+        this.client = new MongoClient(MONGODB_URI, options);
         global._mongoClientPromise = this.client.connect();
       }
       this.clientPromise = global._mongoClientPromise;
     } else {
-      this.client = new MongoClient(uri, options);
+      this.client = new MongoClient(MONGODB_URI, options);
       this.clientPromise = this.client.connect();
     }
   }
@@ -53,7 +53,7 @@ class MongoDB {
   public async connect(): Promise<DatabaseConnection> {
     try {
       const client = await this.clientPromise;
-      const db = client.db(process.env.MONGODB_DB_NAME);
+      const db = client.db(MONGODB_DB_NAME);
 
       this.client = client;
       this.db = db;
