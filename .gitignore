@@ -35,3 +35,7 @@ pnpm-lock.yaml
 example-collection/
 
 .next
+
+temp
+public/*.js
+public/*.js.map
