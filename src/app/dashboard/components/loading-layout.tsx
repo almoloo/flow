@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function LoadingLayout() {
   return (
     <>
-      <div className="lg:col-span-3 flex flex-col space-y-2">
+      <div className="lg:col-span-3 flex flex-col space-y-1">
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-10 w-full" />

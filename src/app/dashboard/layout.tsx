@@ -1,7 +1,7 @@
 "use client";
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import DashboardHeader from "./components/header";
 import DashboardFooter from "./components/footer";
 import DashboardSidebar from "./components/sidebar";
@@ -13,6 +13,7 @@ import InitVendor from "./components/init-vendor";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { connected, isLoading: loadingWallet } = useWallet();
   const { loading: loadingVendor, name: vendorName } = useVendorInfo();
+  const currentPath = usePathname();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isInit, setIsInit] = useState(false);
@@ -34,12 +35,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <>
       <DashboardHeader />
-      <div className="grow lg:grid lg:grid-cols-12 lg:mx-10 lg:gap-10 py-5">
+      <div className="grow flex flex-col lg:grid lg:grid-cols-12 mx-5 lg:mx-10 gap-5 lg:gap-10 py-5">
         {isLoading ? (
           <LoadingLayout />
         ) : (
           <>
-            <DashboardSidebar className="lg:col-span-3 bg-blue-100" disabled={!isInit} />
+            <DashboardSidebar className="lg:col-span-3" disabled={!isInit} path={currentPath} />
             <main className="lg:col-span-9 bg-red-100">{isInit ? children : <InitVendor />}</main>
           </>
         )}
