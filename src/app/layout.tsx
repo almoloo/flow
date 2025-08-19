@@ -19,7 +19,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <Providers>
         <body>
-          <div id="root">{children}</div>
+          <div id="root" className="min-h-screen flex flex-col">
+            {children}
+          </div>
           <WrongNetworkAlert />
           <Toaster />
         </body>
