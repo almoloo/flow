@@ -1,8 +1,8 @@
 #[test_only]
-module message_board_addr::test_end_to_end {
+module flow_addr::test_end_to_end {
     use std::string;
 
-    use message_board_addr::message_board;
+    use flow_addr::message_board;
 
     #[test(sender = @message_board_addr)]
     fun test_end_to_end(sender: &signer) {

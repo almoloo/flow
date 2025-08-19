@@ -1,4 +1,4 @@
-module message_board_addr::message_board {
+module flow_addr::message_board {
     use std::string::String;
 
     use aptos_framework::object::{Self, ExtendRef};
@@ -54,7 +54,7 @@ module message_board_addr::message_board {
     // ======================== Helper functions ========================
 
     fun get_board_obj_address(): address {
-        object::create_object_address(&@message_board_addr, BOARD_OBJECT_SEED)
+        object::create_object_address(&@flow_addr, BOARD_OBJECT_SEED)
     }
 
     fun get_board_obj_signer(): signer acquires BoardObjectController {
