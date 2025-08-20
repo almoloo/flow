@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { getAccountAPTBalance } from "@/view-functions/getAccountBalance";
+import { getVendorInfo } from "@/view-functions/getVendorInfo";
 
 interface VendorInfo {
   balance: string | null;
   name: string | null;
   address: string | null;
+  email: string | null;
   avatar: string | null;
   loading: boolean;
   error: string | null;
@@ -17,6 +18,7 @@ export function useVendorInfo() {
     balance: null,
     name: null,
     address: null,
+    email: null,
     avatar: null,
     loading: false,
     error: null,
@@ -28,6 +30,7 @@ export function useVendorInfo() {
         balance: null,
         name: null,
         address: null,
+        email: null,
         avatar: null,
         loading: false,
         error: null,
@@ -38,18 +41,17 @@ export function useVendorInfo() {
     setVendorInfo((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      // Fetch balance using existing view function
-      const balance = await getAccountAPTBalance({ accountAddress: account.address.toString() });
+      const vendorInfo = getVendorInfo({ walletAddress: account.address.toString() });
 
       // TODO: Implement name fetching from database or contract
       // const name = await fetchVendorName(account.address.toString());
-      const name = null; // Placeholder
 
       setVendorInfo({
-        balance: balance.toString(),
-        name,
-        address: account.address.toString(),
-        avatar: null,
+        balance: vendorInfo.balance.toString(),
+        name: vendorInfo.name,
+        address: vendorInfo.address,
+        email: vendorInfo.email,
+        avatar: `/api/avatar/vendor/${vendorInfo.address}`,
         loading: false,
         error: null,
       });

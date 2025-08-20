@@ -12,12 +12,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
 import { formatAddress } from "@/lib/utils";
-// import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { ChevronDownIcon, LoaderIcon } from "lucide-react";
+import { AvatarImage } from "@radix-ui/react-avatar";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { ChevronDownIcon, LoaderIcon, LogOutIcon, UserPenIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function AccountButton() {
-  //   const { account, isLoading } = useWallet();
-  const { address, loading, name, balance } = useVendorInfo();
+  const { disconnect } = useWallet();
+  const { address, loading, name, balance, avatar } = useVendorInfo();
 
   return (
     <>
@@ -35,15 +37,30 @@ export default function AccountButton() {
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>
-            <Avatar>
-              <AvatarFallback>AA</AvatarFallback>
+        <DropdownMenuContent className="min-w-[200px]">
+          <DropdownMenuLabel className="flex items-center space-x-2">
+            <Avatar className="rounded-lg">
+              <AvatarImage src={avatar ?? ""} alt="Vendor Avatar" />
+              <AvatarFallback>{name?.substring(0, 2)}</AvatarFallback>
             </Avatar>
-            Hi {name} {parseFloat(balance!) / Math.pow(10, 8)}
+            <div className="flex flex-col">
+              <strong className="font-semibold text-sm">{name ?? address}</strong>
+              <small className="font-mono font-normal text-slate-500">{balance ?? "0"} USDT</small>
+            </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>hh</DropdownMenuItem>
+          {/* TODO: Create edit profle page */}
+          <DropdownMenuItem asChild>
+            <Link passHref href="/profile" className="cursor-pointer">
+              <UserPenIcon className="size-5 mr-2" />
+              Edit Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="cursor-pointer text-rose-500" onSelect={disconnect}>
+            <LogOutIcon className="size-5 mr-2" />
+            Logout
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

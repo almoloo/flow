@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         ) : (
           <>
             <DashboardSidebar className="lg:col-span-3" disabled={!isInit} path={currentPath} />
-            <main className="lg:col-span-9 bg-red-100">{isInit ? children : <InitVendor />}</main>
+            <main className="lg:col-span-9">{isInit ? children : <InitVendor />}</main>
           </>
         )}
       </div>
