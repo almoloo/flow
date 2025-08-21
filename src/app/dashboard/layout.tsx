@@ -8,7 +8,6 @@ import DashboardSidebar from "./components/sidebar";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
 import { useEffect, useState } from "react";
 import LoadingLayout from "./components/loading-layout";
-import InitVendor from "./components/init-vendor";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { connected, isLoading: loadingWallet } = useWallet();
@@ -29,6 +28,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     if (!isLoading && vendorName) {
       setIsInit(true);
+    } else if (!isLoading && !vendorName && currentPath !== "/dashboard/profile") {
+      redirect("/dashboard/profile");
     }
   }, [isLoading, vendorName]);
 
@@ -41,7 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         ) : (
           <>
             <DashboardSidebar className="lg:col-span-3" disabled={!isInit} path={currentPath} />
-            <main className="lg:col-span-9">{isInit ? children : <InitVendor />}</main>
+            <main className="lg:col-span-9">{children}</main>
           </>
         )}
       </div>

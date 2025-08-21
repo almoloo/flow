@@ -10,6 +10,8 @@ export default function LoadingLayout() {
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
       </div>
       <div className="lg:col-span-9 flex flex-col space-y-4">
         <Skeleton className="h-10 w-1/3" />

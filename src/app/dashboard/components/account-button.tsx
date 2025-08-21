@@ -26,7 +26,7 @@ export default function AccountButton() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
-            {loading || !address ? (
+            {loading ? (
               <LoaderIcon className="size-4 animate-spin text-slate-500" />
             ) : (
               <>
@@ -44,12 +44,11 @@ export default function AccountButton() {
               <AvatarFallback>{name?.substring(0, 2)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <strong className="font-semibold text-sm">{name ?? address}</strong>
+              <strong className="font-semibold text-sm">{name ?? formatAddress(address!)}</strong>
               <small className="font-mono font-normal text-slate-500">{balance ?? "0"} USDT</small>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* TODO: Create edit profle page */}
           <DropdownMenuItem asChild>
             <Link passHref href="/profile" className="cursor-pointer">
               <UserPenIcon className="size-5 mr-2" />

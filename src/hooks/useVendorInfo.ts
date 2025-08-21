@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { getVendorInfo } from "@/view-functions/getVendorInfo";
+import { generateAvatarUrl } from "@/lib/utils";
 
 interface VendorInfo {
   balance: string | null;
@@ -12,6 +13,27 @@ interface VendorInfo {
   error: string | null;
 }
 
+/**
+ * React hook to fetch and manage vendor information based on the connected wallet account.
+ *
+ * This hook retrieves vendor details such as balance, name, address, email, and avatar
+ * for the currently connected wallet. It provides loading and error states, and exposes
+ * a `refresh` method to manually re-fetch the vendor information.
+ *
+ * @returns An object containing:
+ * - `balance`: The vendor's balance as a string or `null`.
+ * - `name`: The vendor's name or `null`.
+ * - `address`: The wallet address as a string or `null`.
+ * - `email`: The vendor's email or `null`.
+ * - `avatar`: The generated avatar URL or `null`.
+ * - `loading`: Boolean indicating if the data is being loaded.
+ * - `error`: Error message if fetching fails, otherwise `null`.
+ * - `refresh`: Function to manually refresh the vendor info.
+ * - `isConnected`: Boolean indicating if the wallet is connected.
+ *
+ * @example
+ * const { name, balance, loading, error, refresh, isConnected } = useVendorInfo();
+ */
 export function useVendorInfo() {
   const { account, connected } = useWallet();
   const [vendorInfo, setVendorInfo] = useState<VendorInfo>({
@@ -29,7 +51,7 @@ export function useVendorInfo() {
       setVendorInfo({
         balance: null,
         name: null,
-        address: null,
+        address: account?.address.toString() || null,
         email: null,
         avatar: null,
         loading: false,
@@ -43,15 +65,16 @@ export function useVendorInfo() {
     try {
       const vendorInfo = getVendorInfo({ walletAddress: account.address.toString() });
 
-      // TODO: Implement name fetching from database or contract
-      // const name = await fetchVendorName(account.address.toString());
+      if (!vendorInfo.name) {
+        throw new Error("Vendor name not found");
+      }
 
       setVendorInfo({
-        balance: vendorInfo.balance.toString(),
+        balance: vendorInfo.balance ? vendorInfo.balance.toString() : null,
         name: vendorInfo.name,
-        address: vendorInfo.address,
-        email: vendorInfo.email,
-        avatar: `/api/avatar/vendor/${vendorInfo.address}`,
+        address: account.address.toString(),
+        email: vendorInfo.email ? vendorInfo.email : null,
+        avatar: generateAvatarUrl(account.address.toString(), "vendor"),
         loading: false,
         error: null,
       });
@@ -59,6 +82,8 @@ export function useVendorInfo() {
       console.error("Failed to fetch vendor info:", error);
       setVendorInfo((prev) => ({
         ...prev,
+        address: account?.address.toString(),
+        avatar: generateAvatarUrl(account?.address.toString(), "vendor"),
         loading: false,
         error: error.message || "Failed to fetch vendor info",
       }));
@@ -79,17 +104,3 @@ export function useVendorInfo() {
     isConnected: connected,
   };
 }
-
-// FIXME: IF DATABASE
-// async function fetchVendorName(address: string): Promise<string | null> {
-//   try {
-//     // Fetch from your MongoDB database or smart contract
-//     // Example: const response = await fetch(`/api/vendor/${address}`);
-//     // const data = await response.json();
-//     // return data.name;
-//     return null;
-//   } catch (error) {
-//     console.error("Failed to fetch vendor name:", error);
-//     return null;
-//   }
-// }
