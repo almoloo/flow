@@ -22,10 +22,10 @@ export default function PageTitle({ title, segment, actionLabel, actionIcon }: P
         )}
       </div>
       {actionLabel && (
-        <Button className="flex items-center space-x-2">
+        <Button>
           {actionIcon &&
             (React.isValidElement(actionIcon)
-              ? React.cloneElement(actionIcon, { className: `${actionIcon.props.className ?? ""} w-5 h-5` })
+              ? React.cloneElement(actionIcon, { className: `${actionIcon.props.className ?? ""} size-5 mr-2` })
               : actionIcon)}
           <span>{actionLabel}</span>
         </Button>

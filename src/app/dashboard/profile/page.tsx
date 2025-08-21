@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { uploadFile } from "@/lib/s3";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
 import { initVendor } from "@/entry-functions/initVendor";
+import { LoaderIcon, SaveIcon } from "lucide-react";
 
 const profileSchema = z.object({
   name: z
@@ -49,27 +49,36 @@ function uploadAvatar(avatar: File, address: string) {
 
 export default function ProfilePage() {
   const { account } = useWallet();
-  const { name, refresh } = useVendorInfo();
+  const { vendor, refresh } = useVendorInfo();
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name: vendor?.name ?? "",
+      email: vendor?.email ?? "",
     },
   });
 
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (vendor?.name) {
+      form.setValue("name", vendor.name);
+    }
+    if (vendor?.email) {
+      form.setValue("email", vendor.email);
+    }
+  }, [vendor, form]);
 
   const onSubmit = async (data: z.infer<typeof profileSchema>) => {
     console.log("Form submitted:", data);
     setSubmitting(true);
 
     try {
-      if (!name) {
+      if (!vendor?.name) {
         // TODO: SUBMIT DATA TO CONTRACT
         await initVendor(account?.address.toString()!);
       }
-      const avatarUrl = await uploadAvatar(data.avatar, account?.address.toString()!);
+      await uploadAvatar(data.avatar, account?.address.toString()!);
       refresh();
       // TODO: SHOW SUCCESS TOAST
     } catch (error) {
@@ -96,6 +105,7 @@ export default function ProfilePage() {
           <FormField
             control={form.control}
             name="name"
+            disabled={submitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -110,6 +120,7 @@ export default function ProfilePage() {
           <FormField
             control={form.control}
             name="email"
+            disabled={submitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -124,6 +135,7 @@ export default function ProfilePage() {
           <FormField
             control={form.control}
             name="avatar"
+            disabled={submitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Avatar</FormLabel>
@@ -137,6 +149,7 @@ export default function ProfilePage() {
                     onBlur={field.onBlur}
                     name={field.name}
                     ref={field.ref}
+                    disabled={field.disabled}
                   />
                 </FormControl>
                 <FormDescription>Your avatar will be displayed publicly on your gateways.</FormDescription>
@@ -144,7 +157,8 @@ export default function ProfilePage() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="btn">
+          <Button type="submit" className="btn" disabled={submitting}>
+            {submitting ? <LoaderIcon className="animate-spin size-5 mr-2" /> : <SaveIcon className="size-5 mr-2" />}
             Save Changes
           </Button>
         </form>

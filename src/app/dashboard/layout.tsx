@@ -11,7 +11,7 @@ import LoadingLayout from "./components/loading-layout";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { connected, isLoading: loadingWallet } = useWallet();
-  const { loading: loadingVendor, name: vendorName } = useVendorInfo();
+  const { loading: loadingVendor, vendor } = useVendorInfo();
   const currentPath = usePathname();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -26,12 +26,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [loadingWallet, loadingVendor]);
 
   useEffect(() => {
-    if (!isLoading && vendorName) {
+    if (!isLoading && vendor) {
       setIsInit(true);
-    } else if (!isLoading && !vendorName && currentPath !== "/dashboard/profile") {
+    } else if (!isLoading && !vendor && currentPath !== "/dashboard/profile") {
       redirect("/dashboard/profile");
     }
-  }, [isLoading, vendorName]);
+  }, [isLoading, vendor]);
 
   return (
     <>

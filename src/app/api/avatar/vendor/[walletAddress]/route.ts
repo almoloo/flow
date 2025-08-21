@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCollection } from "@/lib/db";
 import { getFile, uploadFile } from "@/lib/s3";
+import { revalidatePath } from "next/cache";
+import { generateAvatarUrl } from "@/lib/utils";
 
 interface Vendor {
   avatarUrl: string;
@@ -63,6 +65,9 @@ export async function POST(_req: NextRequest, { params }: { params: { walletAddr
   // Update the vendor's avatar URL in the database
   const vendors = await getCollection<Vendor>("vendors");
   await vendors.updateOne({ address: walletAddress }, { $set: { avatarUrl: url } }, { upsert: true });
+
+  // Invalidate avatar cache
+  revalidatePath(generateAvatarUrl(walletAddress, "vendor"));
 
   return NextResponse.json({ avatarUrl: url }, { status: 200 });
 }
