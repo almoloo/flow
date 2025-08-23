@@ -6,7 +6,14 @@ export interface Vendor {
   balance: string;
 }
 
-export interface Gateway {}
+export interface Gateway {
+  gatewayId: string;
+  title: string;
+  url: string;
+  callbackUrl: string;
+  active: boolean;
+  sandbox: boolean;
+}
 
 export interface Transaction {}
 

@@ -1,13 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { getVendorInfo } from "@/view-functions/getVendorInfo";
-import { generateAvatarUrl } from "@/lib/utils";
+import { generateImageUrl } from "@/lib/utils";
 import { Vendor } from "@/types";
 
 interface VendorInfo {
   vendor: Vendor | null;
   loading: boolean;
   error: string | null;
+  done: boolean;
 }
 
 /**
@@ -35,47 +36,53 @@ export function useVendorInfo() {
   const { account, connected } = useWallet();
   const [vendorInfo, setVendorInfo] = useState<VendorInfo>({
     vendor: null,
-    loading: false,
+    loading: true,
     error: null,
+    done: false,
   });
 
   const fetchVendorInfo = useCallback(async () => {
-    if (!account?.address || !connected) {
-      setVendorInfo({
-        vendor: null,
-        loading: false,
-        error: null,
-      });
-      return;
-    }
+    // if (!account?.address || !connected) {
+    //   setVendorInfo({
+    //     vendor: null,
+    //     loading: false,
+    //     error: null,
+    //     done: true,
+    //   });
+    //   return;
+    // }
 
-    setVendorInfo((prev) => ({ ...prev, loading: true, error: null }));
+    // setVendorInfo((prev) => ({ ...prev, loading: true, error: null }));
+    if (account?.address && connected) {
+      try {
+        const vendorInfo = await getVendorInfo({ walletAddress: account.address.toString() });
 
-    try {
-      const vendorInfo = await getVendorInfo({ walletAddress: account.address.toString() });
+        if (!vendorInfo) {
+          throw new Error("Vendor name not found");
+        }
 
-      if (!vendorInfo) {
-        throw new Error("Vendor name not found");
+        setVendorInfo({
+          vendor: {
+            balance: vendorInfo.balance ? vendorInfo.balance.toString() : "0",
+            name: vendorInfo.name,
+            address: account.address.toString(),
+            email: vendorInfo.email,
+            avatar: generateImageUrl(account.address.toString(), "vendor"),
+          },
+          loading: false,
+          error: null,
+          done: true,
+        });
+      } catch (error: any) {
+        console.error("Failed to fetch vendor info:", error);
+
+        setVendorInfo({
+          vendor: null,
+          loading: false,
+          error: error.message || "Failed to fetch vendor info",
+          done: true,
+        });
       }
-
-      setVendorInfo({
-        vendor: {
-          balance: vendorInfo.balance ? vendorInfo.balance.toString() : "0",
-          name: vendorInfo.name,
-          address: account.address.toString(),
-          email: vendorInfo.email,
-          avatar: generateAvatarUrl(account.address.toString(), "vendor"),
-        },
-        loading: false,
-        error: null,
-      });
-    } catch (error: any) {
-      console.error("Failed to fetch vendor info:", error);
-      setVendorInfo({
-        vendor: null,
-        loading: false,
-        error: error.message || "Failed to fetch vendor info",
-      });
     }
   }, [account?.address, connected]);
 

@@ -33,7 +33,7 @@ function uploadAvatar(avatar: File, address: string) {
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    const uploadAvatar = await fetch(`/api/avatar/vendor/${address}`, {
+    const uploadAvatar = await fetch(`/api/image/vendor/${address}`, {
       method: "POST",
       body: formData,
     });
