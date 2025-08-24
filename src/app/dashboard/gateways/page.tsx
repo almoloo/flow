@@ -6,9 +6,9 @@ import { getGateways } from "@/view-functions/getGateways";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import LoadingGatewaysList from "./components/loading-list";
-import GatewayItem from "./components/gateway-item";
-import GatewaysEmptyState from "./components/empty-state";
+import LoadingGatewaysList from "@/components/views/gateway/loading-list";
+import GatewayItem from "@/components/views/gateway/gateway-item";
+import GatewaysEmptyState from "@/components/views/gateway/empty-state";
 
 export default function GatewaysPage() {
   const { account } = useWallet();
@@ -30,7 +30,12 @@ export default function GatewaysPage() {
 
   return (
     <div>
-      <PageTitle title="Gateways" actionIcon={<PlusIcon />} actionLabel="Create Gateway" />
+      <PageTitle
+        title="Gateways"
+        actionIcon={<PlusIcon />}
+        actionLabel="Create Gateway"
+        actionUrl="/dashboard/gateways/create"
+      />
       <div className="flex flex-col space-y-2">
         {isLoading ? (
           <LoadingGatewaysList />

@@ -16,7 +16,7 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import LoadingGatewayForm from "../components/loading-form";
+import LoadingGatewayForm from "@/components/views/gateway/loading-form";
 import { editGateway } from "@/entry-functions/editGateway";
 
 interface EditGatewayPageProps {

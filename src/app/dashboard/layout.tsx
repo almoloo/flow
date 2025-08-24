@@ -2,12 +2,12 @@
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { redirect, usePathname } from "next/navigation";
-import DashboardHeader from "./components/header";
-import DashboardFooter from "./components/footer";
-import DashboardSidebar from "./components/sidebar";
+import DashboardHeader from "@/components/views/dashboard/header";
+import DashboardFooter from "@/components/views/dashboard/footer";
+import DashboardSidebar from "@/components/views/dashboard/sidebar";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
 import { useEffect, useState } from "react";
-import LoadingLayout from "./components/loading-layout";
+import LoadingLayout from "@/components/views/dashboard/loading-layout";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { connected, isLoading: loadingWallet } = useWallet();
