@@ -1,12 +1,7 @@
 import { Gateway } from "@/types";
 
-type GetGatewayInfoParams = {
-  walletAddress: string;
-  gatewayId: string;
-};
-
 // TODO: Implement actual data fetching logic
-export const getGateway = async (params: GetGatewayInfoParams): Promise<Gateway | null> => {
+export const getGateway = async (walletAddress: string, gatewayId: string): Promise<Gateway | null> => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
   //   return null

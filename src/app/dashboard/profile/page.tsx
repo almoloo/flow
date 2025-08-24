@@ -157,10 +157,12 @@ export default function ProfilePage() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="btn" disabled={submitting}>
-            {submitting ? <LoaderIcon className="animate-spin size-5 mr-2" /> : <SaveIcon className="size-5 mr-2" />}
-            Save Changes
-          </Button>
+          <div className="flex justify-end">
+            <Button type="submit" className="btn" disabled={submitting}>
+              {submitting ? <LoaderIcon className="animate-spin size-5 mr-2" /> : <SaveIcon className="size-5 mr-2" />}
+              Save Changes
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
