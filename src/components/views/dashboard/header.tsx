@@ -1,7 +1,7 @@
 import FlowLogo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { CircleQuestionMarkIcon, BellIcon } from "lucide-react";
-import AccountButton from "./account-button";
+import AccountButton from "@/components/views/dashboard/account-button";
 
 export default function DashboardHeader() {
   return (

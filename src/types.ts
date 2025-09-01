@@ -6,13 +6,52 @@ export interface Vendor {
   balance: string;
 }
 
-export interface Gateway {}
+export interface Gateway {
+  gatewayId: string;
+  title: string;
+  url: string;
+  callbackUrl: string;
+  active: boolean;
+  sandbox: boolean;
+}
 
-export interface Transaction {}
+export enum TransactionType {
+  GATEWAY = "gateway",
+  INVOICE = "invoice",
+}
+
+export enum TransactionStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
+  FAILED = "failed",
+}
+
+export interface Transaction {
+  transactionId: string;
+  amount: string;
+  currency: string;
+  targetCurrency: string;
+  targetAmount: string;
+  status: TransactionStatus;
+  type: TransactionType;
+  createdAt: string;
+  customer: Customer;
+  vendorAddress: string;
+  gateway: Gateway;
+  fee: string;
+}
+
+export interface Customer {
+  address: string;
+  email?: string;
+}
+
+export interface CustomerInfo extends Customer {
+  transactions: Transaction[];
+  totalSpent: string;
+}
 
 export interface Withdrawal {}
-
-export interface Customer {}
 
 export interface AgentInfo {}
 

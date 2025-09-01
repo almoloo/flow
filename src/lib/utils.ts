@@ -24,6 +24,6 @@ export function formatAddress(address: string, length = 6): string {
  * @param type - The type of entity, either "vendor" or "gateway", to specify the avatar category.
  * @returns The URL string pointing to the avatar image for the specified address and type.
  */
-export function generateAvatarUrl(address: string, type: "vendor" | "gateway"): string {
-  return `/api/avatar/${type}/${address}`;
+export function generateImageUrl(address: string, type: "vendor" | "gateway", gatewayId?: string): string {
+  return `/api/image/${type}/${address}${gatewayId ? `/${gatewayId}` : ""}`;
 }

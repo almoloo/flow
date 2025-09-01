@@ -33,7 +33,7 @@ function uploadAvatar(avatar: File, address: string) {
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    const uploadAvatar = await fetch(`/api/avatar/vendor/${address}`, {
+    const uploadAvatar = await fetch(`/api/image/vendor/${address}`, {
       method: "POST",
       body: formData,
     });
@@ -157,10 +157,12 @@ export default function ProfilePage() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="btn" disabled={submitting}>
-            {submitting ? <LoaderIcon className="animate-spin size-5 mr-2" /> : <SaveIcon className="size-5 mr-2" />}
-            Save Changes
-          </Button>
+          <div className="flex justify-end">
+            <Button type="submit" className="btn" disabled={submitting}>
+              {submitting ? <LoaderIcon className="animate-spin size-5 mr-2" /> : <SaveIcon className="size-5 mr-2" />}
+              Save Changes
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

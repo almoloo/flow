@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
-import { formatAddress, generateAvatarUrl } from "@/lib/utils";
+import { formatAddress, generateImageUrl } from "@/lib/utils";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { ChevronDownIcon, LoaderIcon, LogOutIcon, UserPenIcon } from "lucide-react";
@@ -39,7 +39,7 @@ export default function AccountButton() {
     } else {
       setVendorName("?!");
       setVendorAddress(account?.address.toString() ?? "");
-      setVendorAvatar(generateAvatarUrl(account?.address.toString() ?? "?!", "vendor"));
+      setVendorAvatar(generateImageUrl(account?.address.toString() ?? "?!", "vendor"));
     }
   }, [vendor]);
 

@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCollection } from "@/lib/db";
 import { getFile, uploadFile } from "@/lib/s3";
 import { revalidatePath } from "next/cache";
-import { generateAvatarUrl } from "@/lib/utils";
+import { generateImageUrl } from "@/lib/utils";
 
-interface Vendor {
+interface VendorAvatar {
   avatarUrl: string;
 }
 
@@ -17,7 +17,7 @@ export async function GET(_req: NextRequest, { params }: { params: { walletAddre
 
   let avatarFileName = "default.png";
 
-  const vendors = await getCollection<Vendor>("vendors");
+  const vendors = await getCollection<VendorAvatar>("vendors");
   const vendor = await vendors.findOne({ address: walletAddress });
 
   if (vendor && vendor.avatarUrl) {
@@ -63,11 +63,11 @@ export async function POST(_req: NextRequest, { params }: { params: { walletAddr
   }
 
   // Update the vendor's avatar URL in the database
-  const vendors = await getCollection<Vendor>("vendors");
+  const vendors = await getCollection<VendorAvatar>("vendors");
   await vendors.updateOne({ address: walletAddress }, { $set: { avatarUrl: url } }, { upsert: true });
 
   // Invalidate avatar cache
-  revalidatePath(generateAvatarUrl(walletAddress, "vendor"));
+  revalidatePath(generateImageUrl(walletAddress, "vendor"));
 
   return NextResponse.json({ avatarUrl: url }, { status: 200 });
 }
