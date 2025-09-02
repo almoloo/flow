@@ -6,7 +6,7 @@ import TxEmptyState from "@/components/views/transaction/tx-empty-state";
 import TxRow from "@/components/views/transaction/tx-row";
 import TxRowLoading from "@/components/views/transaction/tx-row-loading";
 import { Transaction } from "@/types";
-import { getTransactions } from "@/view-functions/GetTransactions";
+import { getTransactions } from "@/view-functions/getTransactions";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useEffect, useState } from "react";
 

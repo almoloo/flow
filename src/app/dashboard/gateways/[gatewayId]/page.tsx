@@ -2,7 +2,7 @@
 
 import PageTitle from "@/components/page-title";
 import { Gateway } from "@/types";
-import { getGateway } from "@/view-functions/GetGateway";
+import { getGateway } from "@/view-functions/getGateway";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";

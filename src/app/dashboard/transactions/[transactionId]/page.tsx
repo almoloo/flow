@@ -6,7 +6,7 @@ import TxInfoLoading from "@/components/views/transaction/tx-info-loading";
 import TxInfoRow from "@/components/views/transaction/tx-info-row";
 import { formatAddress } from "@/lib/utils";
 import type { Transaction } from "@/types";
-import { getTransaction } from "@/view-functions/GetTransaction";
+import { getTransaction } from "@/view-functions/getTransaction";
 import { useEffect, useState } from "react";
 
 interface TransactionPageProps {
