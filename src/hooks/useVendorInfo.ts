@@ -55,7 +55,7 @@ export function useVendorInfo() {
     // setVendorInfo((prev) => ({ ...prev, loading: true, error: null }));
     if (account?.address && connected) {
       try {
-        const vendorInfo = await getVendorInfo({ walletAddress: account.address.toString() });
+        const vendorInfo = await getVendorInfo(account.address.toString());
 
         if (!vendorInfo) {
           throw new Error("Vendor name not found");

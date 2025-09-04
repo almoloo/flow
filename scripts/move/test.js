@@ -7,9 +7,7 @@ async function test() {
 
   await move.test({
     packageDirectoryPath: "contract",
-    namedAddresses: {
-      message_board_addr: "0x100",
-    },
+    namedAddresses: { flow_addr: process.env.NEXT_MODULE_PUBLISHER_ACCOUNT_ADDRESS },
   });
 }
 test();

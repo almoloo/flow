@@ -1,19 +1,31 @@
 import { Vendor } from "@/types";
+import { FLOW_ABI } from "@/utils/flow_abi";
+import { surfClient } from "@/utils/surfClient";
 
-type GetVendorInfoParams = {
-  walletAddress: string;
-};
+export const getVendorInfo = async (walletAddress: string): Promise<Vendor | null> => {
+  const vendor = await surfClient()
+    .useABI(FLOW_ABI)
+    .view.get_vendor_info({
+      functionArguments: [walletAddress as `0x${string}`],
+      typeArguments: [],
+    })
+    .catch((error) => {
+      console.error("Failed to fetch vendor info:", error);
+      return null;
+    });
 
-// TODO: Implement actual data fetching logic
-export const getVendorInfo = async (params: GetVendorInfoParams): Promise<Vendor | null> => {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  if (vendor) {
+    const dbVendorInfo = await fetch(`/api/vendor/${walletAddress}`);
+    const dbVendor = await dbVendorInfo.json();
 
-  // return null;
-
-  return {
-    address: params.walletAddress,
-    email: "ali@example.com",
-    name: "Ali Mousavi",
-    balance: "100",
-  };
+    return {
+      address: walletAddress,
+      name: vendor[1],
+      balance: vendor[2],
+      email: dbVendor.email ?? "",
+      avatar: dbVendor.avatar ?? "",
+    };
+  } else {
+    return null;
+  }
 };

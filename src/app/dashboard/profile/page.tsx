@@ -12,6 +12,9 @@ import { useEffect, useState } from "react";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
 import { initVendor } from "@/entry-functions/initVendor";
 import { LoaderIcon, SaveIcon } from "lucide-react";
+import { useWalletClient } from "@thalalabs/surf/hooks";
+import { FLOW_ABI } from "@/utils/flow_abi";
+import { aptosClient } from "@/utils/aptosClient";
 
 const profileSchema = z.object({
   name: z
@@ -28,27 +31,65 @@ const profileSchema = z.object({
   }),
 });
 
-function uploadAvatar(avatar: File, address: string) {
-  return new Promise(async (resolve, reject) => {
-    const formData = new FormData();
-    formData.append("avatar", avatar);
+function updateInfo(avatar: File, address: string, name: string, email: string) {
+  function uploadAvatar(avatar: File, address: string): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      const formData = new FormData();
+      formData.append("avatar", avatar);
 
-    const uploadAvatar = await fetch(`/api/image/vendor/${address}`, {
-      method: "POST",
-      body: formData,
+      const uploadAvatar = await fetch(`/api/image/vendor/${address}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (uploadAvatar.ok) {
+        const { url } = await uploadAvatar.json();
+        resolve(url);
+      } else {
+        reject(new Error("Failed to upload avatar"));
+      }
     });
+  }
+  function upsertInfo(address: string, name: string, email: string) {
+    return new Promise(async (resolve, reject) => {
+      const response = await fetch(`/api/vendor/${address}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          address,
+          name,
+          email,
+        }),
+      });
 
-    if (uploadAvatar.ok) {
-      const { url } = await uploadAvatar.json();
-      resolve(url);
-    } else {
-      reject(new Error("Failed to upload avatar"));
+      if (response.ok) {
+        resolve(true);
+      } else {
+        reject(new Error("Failed to update vendor info"));
+      }
+    });
+  }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const uploadedAvatar = await uploadAvatar(avatar, address);
+      const upsertedInfo = await upsertInfo(address, name, email);
+
+      if (uploadedAvatar && upsertedInfo) {
+        resolve(true);
+      } else {
+        reject(new Error("Failed to update vendor info"));
+      }
+    } catch (error) {
+      reject(error);
     }
   });
 }
 
 export default function ProfilePage() {
   const { account } = useWallet();
+  const { client } = useWalletClient();
   const { vendor, refresh } = useVendorInfo();
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -74,11 +115,20 @@ export default function ProfilePage() {
     setSubmitting(true);
 
     try {
-      if (!vendor?.name) {
-        // TODO: SUBMIT DATA TO CONTRACT
-        await initVendor(account?.address.toString()!);
+      if (!vendor) {
+        console.log("Initializing vendor...");
+        // await initVendor(account?.address.toString()!, data.name);
+        const commitedTx = await client?.useABI(FLOW_ABI).init_vendor({
+          arguments: [data.name],
+          type_arguments: [],
+        });
+
+        const executedTx = await aptosClient().waitForTransaction({
+          transactionHash: commitedTx!.hash,
+        });
+        console.log("Vendor initialized");
       }
-      await uploadAvatar(data.avatar, account?.address.toString()!);
+      await updateInfo(data.avatar, account?.address.toString()!, data.name, data.email);
       refresh();
       // TODO: SHOW SUCCESS TOAST
     } catch (error) {
