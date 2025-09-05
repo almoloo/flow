@@ -10,11 +10,11 @@ import { z } from "zod";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useEffect, useState } from "react";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
-import { initVendor } from "@/entry-functions/initVendor";
 import { LoaderIcon, SaveIcon } from "lucide-react";
 import { useWalletClient } from "@thalalabs/surf/hooks";
 import { FLOW_ABI } from "@/utils/flow_abi";
 import { aptosClient } from "@/utils/aptosClient";
+import { useToast } from "@/components/ui/use-toast";
 
 const profileSchema = z.object({
   name: z
@@ -43,8 +43,8 @@ function updateInfo(avatar: File, address: string, name: string, email: string) 
       });
 
       if (uploadAvatar.ok) {
-        const { url } = await uploadAvatar.json();
-        resolve(url);
+        const { avatarUrl } = await uploadAvatar.json();
+        resolve(avatarUrl);
       } else {
         reject(new Error("Failed to upload avatar"));
       }
@@ -74,8 +74,9 @@ function updateInfo(avatar: File, address: string, name: string, email: string) 
   return new Promise(async (resolve, reject) => {
     try {
       const uploadedAvatar = await uploadAvatar(avatar, address);
+      console.log("Uploaded Avatar URL:", uploadedAvatar);
       const upsertedInfo = await upsertInfo(address, name, email);
-
+      console.log("Upserted Info:", upsertedInfo);
       if (uploadedAvatar && upsertedInfo) {
         resolve(true);
       } else {
@@ -91,6 +92,7 @@ export default function ProfilePage() {
   const { account } = useWallet();
   const { client } = useWalletClient();
   const { vendor, refresh } = useVendorInfo();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -111,35 +113,37 @@ export default function ProfilePage() {
   }, [vendor, form]);
 
   const onSubmit = async (data: z.infer<typeof profileSchema>) => {
-    console.log("Form submitted:", data);
     setSubmitting(true);
 
     try {
       if (!vendor) {
-        console.log("Initializing vendor...");
-        // await initVendor(account?.address.toString()!, data.name);
         const commitedTx = await client?.useABI(FLOW_ABI).init_vendor({
           arguments: [data.name],
           type_arguments: [],
         });
 
-        const executedTx = await aptosClient().waitForTransaction({
+        await aptosClient().waitForTransaction({
           transactionHash: commitedTx!.hash,
         });
-        console.log("Vendor initialized");
       }
       await updateInfo(data.avatar, account?.address.toString()!, data.name, data.email);
       refresh();
-      // TODO: SHOW SUCCESS TOAST
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+        duration: 5000,
+      });
     } catch (error) {
-      console.error("Error uploading avatar:", error);
-      // TODO: SHOW ERROR TOAST
+      console.error("Error:", error);
+      toast({
+        title: "Error",
+        description: "There was an error updating your profile. Please try again.",
+        variant: "destructive",
+        duration: 5000,
+      });
     } finally {
       setSubmitting(false);
     }
-  };
-  const onError = (errors: any) => {
-    console.error("Form errors:", errors);
   };
 
   return (
@@ -151,7 +155,7 @@ export default function ProfilePage() {
       </p>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit, onError)} className="mt-5 space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 space-y-4">
           <FormField
             control={form.control}
             name="name"
