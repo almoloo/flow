@@ -1,47 +1,36 @@
 import { Gateway } from "@/types";
+import { FLOW_ABI } from "@/utils/flow_abi";
+import { surfClient } from "@/utils/surfClient";
 
-type GetGatewaysInfoParams = {
-  walletAddress: string;
-};
+interface GatewayInfo {
+  id: number;
+  label: string;
+  metadata: string;
+  is_active: boolean;
+}
 
-// TODO: Implement actual data fetching logic
-export const getGateways = async (params: GetGatewaysInfoParams): Promise<Array<Gateway>> => {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+export const getGateways = async (walletAddress: string): Promise<Array<Gateway>> => {
+  const gateways = (
+    await surfClient()
+      .useABI(FLOW_ABI)
+      .view.get_all_gateways({
+        functionArguments: [walletAddress as `0x${string}`],
+        typeArguments: [],
+      })
+      .catch((error) => {
+        console.error("Failed to fetch gateways:", error);
+        return [];
+      })
+  )[0] as GatewayInfo[];
 
-  // return [];
+  const modifiedGateways: Gateway[] = gateways.map((gateway: any) => ({
+    gatewayId: gateway.id.toString(),
+    title: gateway.label,
+    url: JSON.parse(gateway.metadata).url,
+    callbackUrl: JSON.parse(gateway.metadata).callbackUrl,
+    active: JSON.parse(gateway.metadata).active,
+    sandbox: JSON.parse(gateway.metadata).sandbox,
+  }));
 
-  return [
-    {
-      title: "Sample Gateway",
-      url: "https://example.com",
-      callbackUrl: "https://example.com/callback",
-      active: true,
-      sandbox: false,
-      gatewayId: "asdfad",
-    },
-    {
-      title: "CryptoPay",
-      url: "https://cryptopay.com",
-      callbackUrl: "https://cryptopay.com/callback",
-      active: false,
-      sandbox: true,
-      gatewayId: "fdhdfgnre",
-    },
-    {
-      title: "FastGateway",
-      url: "https://fastgateway.io",
-      callbackUrl: "https://fastgateway.io/callback",
-      active: true,
-      sandbox: false,
-      gatewayId: "asdgrehrtes",
-    },
-    {
-      title: "SecurePayments",
-      url: "https://securepayments.net",
-      callbackUrl: "https://securepayments.net/callback",
-      active: true,
-      sandbox: true,
-      gatewayId: "asdf34tehtr",
-    },
-  ];
+  return modifiedGateways;
 };

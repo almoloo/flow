@@ -19,8 +19,8 @@ export default function GatewaysPage() {
   useEffect(() => {
     if (account && account.address && isLoading) {
       const fetchData = async () => {
-        const gatewayss = await getGateways({ walletAddress: account.address.toString() });
-        setGateways(gatewayss);
+        const fetchedGateways = await getGateways(account.address.toString());
+        setGateways(fetchedGateways);
         setIsLoading(false);
       };
 
