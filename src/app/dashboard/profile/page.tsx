@@ -125,6 +125,15 @@ export default function ProfilePage() {
         await aptosClient().waitForTransaction({
           transactionHash: commitedTx!.hash,
         });
+      } else {
+        const commitedTx = await client?.useABI(FLOW_ABI).update_vendor_name({
+          arguments: [data.name],
+          type_arguments: [],
+        });
+
+        await aptosClient().waitForTransaction({
+          transactionHash: commitedTx!.hash,
+        });
       }
       await updateInfo(data.avatar, account?.address.toString()!, data.name, data.email);
       refresh();
