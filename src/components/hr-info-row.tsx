@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { CopyIcon } from "lucide-react";
 
-interface TxInfoRowProps {
+interface HrInfoRowProps {
   label: string;
   value: string;
   copyable?: boolean;
 }
 
-export default function TxInfoRow({ label, value, copyable }: TxInfoRowProps) {
+export default function HrInfoRow({ label, value, copyable }: HrInfoRowProps) {
   return (
     <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
       <div className="md:w-1/4 text-slate-500">{label}</div>
