@@ -158,15 +158,14 @@ export default function GatewayForm({ onSubmit, data, submitting }: GatewayFormP
                 </Select>
                 <FormDescription>
                   Set to Active to accept payments. Inactive gateways will not process new transactions.
+                  <br />
                   {/* TODO: CREATE HELP PAGE */}
-                  <div>
-                    <Link href="/" passHref>
-                      <Button variant="link" size="sm" className="px-0 text-xs">
-                        Learn about the parameters
-                        <ExternalLinkIcon className="size-4 ml-1" />
-                      </Button>
-                    </Link>
-                  </div>
+                  <Link href="/" passHref>
+                    <Button variant="link" size="sm" className="px-0 text-xs">
+                      Learn about the parameters
+                      <ExternalLinkIcon className="size-4 ml-1" />
+                    </Button>
+                  </Link>
                 </FormDescription>
                 <FormMessage />
               </FormItem>
