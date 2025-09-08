@@ -3,32 +3,15 @@
 import PageTitle from "@/components/page-title";
 import { useToast } from "@/components/ui/use-toast";
 import GatewayForm, { formSchema } from "@/components/views/gateway/gateway-form";
+import { uploadGatewayLogo } from "@/lib/utils";
 import { aptosClient } from "@/utils/aptosClient";
 import { FLOW_ABI } from "@/utils/flow_abi";
+import { getGateways } from "@/view-functions/getGateways";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useWalletClient } from "@thalalabs/surf/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import z from "zod";
-
-function uploadLogo(logo: File, address: string, id: string): Promise<string> {
-  return new Promise(async (resolve, reject) => {
-    const formData = new FormData();
-    formData.append("logo", logo);
-
-    const uploadLogo = await fetch(`/api/image/gateway/${address}/${id}`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (uploadLogo.ok) {
-      const { logoUrl } = await uploadLogo.json();
-      resolve(logoUrl);
-    } else {
-      reject(new Error("Failed to upload logo"));
-    }
-  });
-}
 
 export default function CreateGatewayPage() {
   const { account } = useWallet();
@@ -58,11 +41,15 @@ export default function CreateGatewayPage() {
         transactionHash: commitedTx!.hash,
       });
 
-      // TODO: GET THE NEW GATEWAY ID
-      const newGatewayId = "some-id";
+      let newGatewayId: string | null = null;
+      const gateways = await getGateways(account!.address.toString());
+      if (gateways.length > 0) {
+        const sorted = gateways.sort((a, b) => (a.gatewayId > b.gatewayId ? -1 : 1));
+        newGatewayId = sorted[0].gatewayId;
+      }
 
-      if (data.logo) {
-        await uploadLogo(data.logo!, account?.address.toString()!, newGatewayId);
+      if (data.logo && newGatewayId) {
+        await uploadGatewayLogo(data.logo!, account?.address.toString()!, newGatewayId);
       }
 
       router.push("/dashboard/gateways");

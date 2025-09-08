@@ -27,3 +27,31 @@ export function formatAddress(address: string, length = 6): string {
 export function generateImageUrl(address: string, type: "vendor" | "gateway", gatewayId?: string): string {
   return `/api/image/${type}/${address}${gatewayId ? `/${gatewayId}` : ""}`;
 }
+
+/**
+ * Uploads a logo image file to the server for a specific address and ID.
+ *
+ * @param logo - The image file to be uploaded.
+ * @param address - The wallet address of the vendor.
+ * @param id - The unique identifier for the gateway.
+ * @returns A promise that resolves to the URL of the uploaded logo.
+ * @throws Will reject the promise if the upload fails.
+ */
+export function uploadGatewayLogo(logo: File, address: string, id: string): Promise<string> {
+  return new Promise(async (resolve, reject) => {
+    const formData = new FormData();
+    formData.append("logo", logo);
+
+    const uploadLogo = await fetch(`/api/image/gateway/${address}/${id}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (uploadLogo.ok) {
+      const { logoUrl } = await uploadLogo.json();
+      resolve(logoUrl);
+    } else {
+      reject(new Error("Failed to upload logo"));
+    }
+  });
+}
