@@ -35,8 +35,13 @@ function MenuItem({ item, path, disabled }: { item: (typeof menuItems)[number]; 
   const isActive = path === item.href || (item.href !== "/dashboard" && path.startsWith(item.href + "/"));
 
   return (
-    <Link href={disabled ? "" : item.href} passHref aria-disabled={disabled}>
-      <Button className="w-full justify-start space-x-2" variant={isActive ? "secondary" : "ghost"} disabled={disabled}>
+    <Button
+      className="w-full justify-start space-x-2"
+      variant={isActive ? "secondary" : "ghost"}
+      disabled={disabled}
+      asChild
+    >
+      <Link href={disabled ? "" : item.href} aria-disabled={disabled}>
         {item.icon}
         <span className="text-sm font-medium">{item.label}</span>
         {isActive && (
@@ -44,8 +49,8 @@ function MenuItem({ item, path, disabled }: { item: (typeof menuItems)[number]; 
             <ChevronRightIcon className="size-4" />
           </div>
         )}
-      </Button>
-    </Link>
+      </Link>
+    </Button>
   );
 }
 

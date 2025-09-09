@@ -22,11 +22,11 @@ export default function TxRow(tx: Transaction) {
       <TableCell>{tx.gateway.title}</TableCell>
       <TableCell className={statusColor}>{tx.status}</TableCell>
       <TableCell className="py-0" align="right">
-        <Link href={`/dashboard/transactions/${tx.transactionId}`} passHref>
-          <Button size="sm" variant="ghost">
+        <Button size="sm" variant="ghost" asChild>
+          <Link href={`/dashboard/transactions/${tx.transactionId}`}>
             <ChevronRightIcon className="size-5" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </TableCell>
     </TableRow>
   );

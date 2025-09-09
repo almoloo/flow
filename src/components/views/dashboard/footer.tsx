@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function DashboardFooter() {
   return (
@@ -14,8 +15,10 @@ export default function DashboardFooter() {
         <span>Created with love, care & lots of caffeine.</span>
       </p>
       <div>
-        <Button variant="outline" size="icon">
-          <GithubIcon />
+        <Button variant="outline" size="icon" asChild>
+          <Link href="https://github.com/almoloo/flow" target="_blank">
+            <GithubIcon />
+          </Link>
         </Button>
       </div>
     </footer>

@@ -74,7 +74,7 @@ export default function AccountButton() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link passHref href="/dashboard/profile" className="cursor-pointer">
+            <Link href="/dashboard/profile" className="cursor-pointer">
               <UserPenIcon className="size-5 mr-2" />
               Edit Profile
             </Link>

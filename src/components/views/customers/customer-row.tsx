@@ -12,11 +12,11 @@ export default function CustomerRow(customer: CustomerInfo) {
       <TableCell>{customer.transactions.length}</TableCell>
       <TableCell>{customer.email ? "✅" : ""}</TableCell>
       <TableCell className="py-0" align="right">
-        <Link href={`/dashboard/customers/${customer.address}`} passHref>
-          <Button size="sm" variant="ghost">
+        <Button size="sm" variant="ghost" asChild>
+          <Link href={`/dashboard/customers/${customer.address}`}>
             <ChevronRightIcon className="size-5" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </TableCell>
     </TableRow>
   );

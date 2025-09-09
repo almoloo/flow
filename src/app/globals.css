@@ -65,6 +65,16 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
   }
+
+  .payment-bg {
+    background: linear-gradient(
+      180deg,
+      rgba(238, 242, 255, 1) 0%,
+      rgba(238, 242, 255, 1) 50%,
+      rgba(97, 95, 255, 1) 50%,
+      rgba(97, 95, 255, 1) 100%
+    );
+  }
 }
 
 @layer base {
