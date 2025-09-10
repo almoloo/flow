@@ -7,7 +7,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import LoadingGatewayForm from "@/components/views/gateway/loading-form";
-import { editGateway } from "@/entry-functions/editGateway";
+// import { editGateway } from "@/entry-functions/editGateway";
 import GatewayForm, { formSchema } from "@/components/views/gateway/gateway-form";
 import z from "zod";
 import { FLOW_ABI } from "@/utils/flow_abi";

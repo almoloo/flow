@@ -1,7 +1,7 @@
 import { TransactionStatus, TransactionType, type Transaction } from "@/types";
 
 // TODO: Implement actual data fetching logic
-export const getTransaction = async (VendorId: string, transactionId: string): Promise<Transaction | null> => {
+export const getTransaction = async (_VendorId: string, _transactionId: string): Promise<Transaction | null> => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
   // return null;

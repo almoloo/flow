@@ -2,8 +2,8 @@ import { Transaction, TransactionStatus, TransactionType } from "@/types";
 
 // TODO: Implement actual data fetching logic
 export const getTransactions = async (
-  walletAddress: string,
-  type: "vendor" | "customer",
+  _walletAddress: string,
+  _type: "vendor" | "customer",
 ): Promise<Array<Transaction>> => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
 

@@ -1,9 +1,10 @@
 import { getCollection } from "@/lib/db";
 import { generateImageUrl } from "@/lib/utils";
+import { withAuth } from "@/lib/authMiddleware";
 import { Vendor } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
+async function handleGET(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
   const { walletAddress } = params;
 
   if (!walletAddress) {
@@ -23,7 +24,7 @@ export async function GET(_req: NextRequest, { params }: { params: { walletAddre
   });
 }
 
-export async function POST(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
+async function handlePOST(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
   const { walletAddress } = params;
   const vendorInfo = await _req.json();
 
@@ -40,3 +41,6 @@ export async function POST(_req: NextRequest, { params }: { params: { walletAddr
 
   return NextResponse.json(upsertedVendor);
 }
+
+export const GET = withAuth(handleGET, { requireOwnWallet: false });
+export const POST = withAuth(handlePOST, { requireOwnWallet: true });

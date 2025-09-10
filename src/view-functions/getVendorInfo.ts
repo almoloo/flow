@@ -1,3 +1,4 @@
+import { authenticatedGet } from "@/lib/authenticatedFetch";
 import { Vendor } from "@/types";
 import { FLOW_ABI } from "@/utils/flow_abi";
 import { surfClient } from "@/utils/surfClient";
@@ -15,7 +16,8 @@ export const getVendorInfo = async (walletAddress: string): Promise<Vendor | nul
     });
 
   if (vendor) {
-    const dbVendorInfo = await fetch(`/api/vendor/${walletAddress}`);
+    // const dbVendorInfo = await fetch(`/api/vendor/${walletAddress}`);
+    const dbVendorInfo = await authenticatedGet(`/api/vendor/${walletAddress}`);
     const dbVendor = await dbVendorInfo.json();
 
     return {

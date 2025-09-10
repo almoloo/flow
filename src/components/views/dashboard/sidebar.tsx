@@ -41,7 +41,11 @@ function MenuItem({ item, path, disabled }: { item: (typeof menuItems)[number]; 
       disabled={disabled}
       asChild
     >
-      <Link href={disabled ? "" : item.href} aria-disabled={disabled}>
+      <Link
+        href={disabled ? "" : item.href}
+        aria-disabled={disabled}
+        className={disabled ? "pointer-events-none text-slate-500" : ""}
+      >
         {item.icon}
         <span className="text-sm font-medium">{item.label}</span>
         {isActive && (

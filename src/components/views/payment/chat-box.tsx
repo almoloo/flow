@@ -11,7 +11,7 @@ export default function ChatBox() {
   const gid = searchParams.get("gid");
   const { gateway, loading, error, done } = useGatewayInfo(va!, gid!);
 
-  const [cardMode, setCardMode] = useState<"horizontal" | "vertical">("vertical");
+  const [cardMode] = useState<"horizontal" | "vertical">("vertical");
 
   useEffect(() => {
     if (error) {

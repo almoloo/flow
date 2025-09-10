@@ -1,4 +1,4 @@
-import { CustomerInfo, Transaction } from "@/types";
+import { CustomerInfo } from "@/types";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";

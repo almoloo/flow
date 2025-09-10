@@ -1,6 +1,6 @@
 import { CustomerInfo, TransactionStatus, TransactionType } from "@/types";
 
-export const getCustomer = async (VendorAddress: string, CustomerAddress: string): Promise<CustomerInfo | null> => {
+export const getCustomer = async (_VendorAddress: string, _CustomerAddress: string): Promise<CustomerInfo | null> => {
   // return null;
 
   return {

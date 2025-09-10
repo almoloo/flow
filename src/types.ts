@@ -53,7 +53,17 @@ export interface CustomerInfo extends Customer {
 
 export interface Withdrawal {}
 
-export interface AgentInfo {}
+export interface Question {
+  questionId: string;
+  question: string;
+  answer: string;
+}
+
+export interface AgentInfo {
+  email: string;
+  summary: string;
+  questions: Question[];
+}
 
 export interface Invoice {}
 

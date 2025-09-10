@@ -15,6 +15,8 @@ import { useWalletClient } from "@thalalabs/surf/hooks";
 import { FLOW_ABI } from "@/utils/flow_abi";
 import { aptosClient } from "@/utils/aptosClient";
 import { useToast } from "@/components/ui/use-toast";
+import { uploadVendorAvatar } from "@/lib/utils";
+import { authenticatedPost } from "@/lib/authenticatedFetch";
 
 const profileSchema = z.object({
   name: z
@@ -32,36 +34,24 @@ const profileSchema = z.object({
 });
 
 function updateInfo(avatar: File, address: string, name: string, email: string) {
-  function uploadAvatar(avatar: File, address: string): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      const formData = new FormData();
-      formData.append("avatar", avatar);
-
-      const uploadAvatar = await fetch(`/api/image/vendor/${address}`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (uploadAvatar.ok) {
-        const { avatarUrl } = await uploadAvatar.json();
-        resolve(avatarUrl);
-      } else {
-        reject(new Error("Failed to upload avatar"));
-      }
-    });
-  }
   function upsertInfo(address: string, name: string, email: string) {
     return new Promise(async (resolve, reject) => {
-      const response = await fetch(`/api/vendor/${address}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          address,
-          name,
-          email,
-        }),
+      // const response = await fetch(`/api/vendor/${address}`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     address,
+      //     name,
+      //     email,
+      //   }),
+      // });
+
+      const response = await authenticatedPost(`/api/vendor/${address}`, {
+        address,
+        name,
+        email,
       });
 
       if (response.ok) {
@@ -73,7 +63,7 @@ function updateInfo(avatar: File, address: string, name: string, email: string) 
   }
   return new Promise(async (resolve, reject) => {
     try {
-      const uploadedAvatar = await uploadAvatar(avatar, address);
+      const uploadedAvatar = await uploadVendorAvatar(avatar, address);
       console.log("Uploaded Avatar URL:", uploadedAvatar);
       const upsertedInfo = await upsertInfo(address, name, email);
       console.log("Upserted Info:", upsertedInfo);

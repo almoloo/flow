@@ -29,6 +29,13 @@
       }
     ]
   },
-  "include": ["src", "./dist/types/**/*.ts", "./next-env.d.ts", ".next/types/**/*.ts", "temp/db-examples.ts"],
+  "include": [
+    "src",
+    "./dist/types/**/*.ts",
+    "./next-env.d.ts",
+    ".next/types/**/*.ts",
+    "temp/db-examples.ts",
+    "temp/AuthenticationDemo.tsx"
+  ],
   "exclude": ["./node_modules"]
 }
