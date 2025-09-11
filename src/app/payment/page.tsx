@@ -7,6 +7,7 @@ interface PaymentPageProps {
   }>;
 }
 
+export const dynamic = "force-dynamic";
 export default async function PaymentPage({ searchParams }: PaymentPageProps) {
   const vendorAddress = (await searchParams).va;
   const gatewayId = (await searchParams).gid;

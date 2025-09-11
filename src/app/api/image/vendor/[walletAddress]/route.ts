@@ -9,7 +9,7 @@ interface VendorAvatar {
   avatarUrl: string;
 }
 
-export async function handleGET(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
+async function handleGET(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
   const { walletAddress } = params;
 
   if (!walletAddress) {
@@ -41,7 +41,7 @@ export async function handleGET(_req: NextRequest, { params }: { params: { walle
   });
 }
 
-export async function handlePOST(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
+async function handlePOST(_req: NextRequest, { params }: { params: { walletAddress: string } }) {
   const { walletAddress } = params;
 
   if (!walletAddress) {

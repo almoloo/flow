@@ -11,10 +11,7 @@ interface GatewayCollection {
   gatewayId: string;
 }
 
-export async function handleGET(
-  _req: NextRequest,
-  { params }: { params: { walletAddress: string; gatewayId: string } },
-) {
+async function handleGET(_req: NextRequest, { params }: { params: { walletAddress: string; gatewayId: string } }) {
   const { walletAddress, gatewayId } = params;
 
   if (!walletAddress) {
@@ -50,10 +47,7 @@ export async function handleGET(
   });
 }
 
-export async function handlePOST(
-  _req: NextRequest,
-  { params }: { params: { walletAddress: string; gatewayId: string } },
-) {
+async function handlePOST(_req: NextRequest, { params }: { params: { walletAddress: string; gatewayId: string } }) {
   const { walletAddress, gatewayId } = params;
 
   if (!walletAddress) {
