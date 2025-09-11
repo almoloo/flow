@@ -43,10 +43,7 @@ export function uploadGatewayLogo(logo: File, address: string, id: string): Prom
     const formData = new FormData();
     formData.append("logo", logo);
 
-    const uploadLogo = await fetch(`/api/image/gateway/${address}/${id}`, {
-      method: "POST",
-      body: formData,
-    });
+    const uploadLogo = await authenticatedPost(`/api/image/gateway/${address}/${id}`, formData);
 
     if (uploadLogo.ok) {
       const { logoUrl } = await uploadLogo.json();

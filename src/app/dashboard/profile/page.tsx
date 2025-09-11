@@ -36,18 +36,6 @@ const profileSchema = z.object({
 function updateInfo(avatar: File, address: string, name: string, email: string) {
   function upsertInfo(address: string, name: string, email: string) {
     return new Promise(async (resolve, reject) => {
-      // const response = await fetch(`/api/vendor/${address}`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     address,
-      //     name,
-      //     email,
-      //   }),
-      // });
-
       const response = await authenticatedPost(`/api/vendor/${address}`, {
         address,
         name,

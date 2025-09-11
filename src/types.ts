@@ -60,9 +60,10 @@ export interface Question {
 }
 
 export interface AgentInfo {
-  email: string;
-  summary: string;
-  questions: Question[];
+  error?: string;
+  email?: string;
+  summary?: string;
+  questions?: Question[];
 }
 
 export interface Invoice {}
