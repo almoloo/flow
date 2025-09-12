@@ -15,6 +15,13 @@ export interface Gateway {
   sandbox: boolean;
 }
 
+export interface GatewayInfo {
+  id: number;
+  label: string;
+  metadata: string;
+  is_active: boolean;
+}
+
 export enum TransactionType {
   GATEWAY = "gateway",
   INVOICE = "invoice",

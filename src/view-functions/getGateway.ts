@@ -1,13 +1,29 @@
 import { Gateway } from "@/types";
-import { getGateways } from "./getGateways";
+import { surfClient } from "@/utils/surfClient";
+import { FLOW_ABI } from "@/utils/flow_abi";
+import { GatewayInfo } from "@/types";
+import { modifyGatewayInfo } from "@/lib/utils";
 
 export const getGateway = async (walletAddress: string, gatewayId: string): Promise<Gateway | null> => {
-  // TODO: TEMP, WILL CHANGE LATER
-  const gateways = await getGateways(walletAddress);
-  const gateway = gateways.find((g) => g.gatewayId === gatewayId);
-  if (gateway) {
-    return gateway;
-  } else {
+  try {
+    const gateway = (
+      await surfClient()
+        .useABI(FLOW_ABI)
+        .view.get_gateway_by_id({
+          functionArguments: [walletAddress as `0x${string}`, Number(gatewayId)],
+          typeArguments: [],
+        })
+        .catch(() => {
+          return [null];
+        })
+    )[0] as GatewayInfo;
+    if (gateway) {
+      return modifyGatewayInfo(gateway);
+    } else {
+      throw new Error("Gateway not found");
+    }
+  } catch (error) {
+    console.error("Failed to fetch gateway:", error);
     return null;
   }
 };

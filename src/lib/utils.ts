@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { authenticatedPost } from "./authenticatedFetch";
+import { Gateway, GatewayInfo } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -82,4 +83,16 @@ export function uploadVendorAvatar(avatar: File, address: string): Promise<strin
       reject(new Error("Failed to upload avatar"));
     }
   });
+}
+
+export function modifyGatewayInfo(gateway: GatewayInfo): Gateway {
+  const metadata = JSON.parse(gateway.metadata);
+  return {
+    gatewayId: gateway.id.toString(),
+    title: gateway.label,
+    url: metadata.url,
+    callbackUrl: metadata.callbackUrl,
+    active: metadata.active,
+    sandbox: metadata.sandbox,
+  };
 }

@@ -1,13 +1,7 @@
-import { Gateway } from "@/types";
+import { modifyGatewayInfo } from "@/lib/utils";
+import { Gateway, GatewayInfo } from "@/types";
 import { FLOW_ABI } from "@/utils/flow_abi";
 import { surfClient } from "@/utils/surfClient";
-
-interface GatewayInfo {
-  id: number;
-  label: string;
-  metadata: string;
-  is_active: boolean;
-}
 
 export const getGateways = async (walletAddress: string): Promise<Array<Gateway>> => {
   const gateways = (
@@ -23,14 +17,7 @@ export const getGateways = async (walletAddress: string): Promise<Array<Gateway>
       })
   )[0] as GatewayInfo[];
 
-  const modifiedGateways: Gateway[] = gateways.map((gateway: any) => ({
-    gatewayId: gateway.id.toString(),
-    title: gateway.label,
-    url: JSON.parse(gateway.metadata).url,
-    callbackUrl: JSON.parse(gateway.metadata).callbackUrl,
-    active: JSON.parse(gateway.metadata).active,
-    sandbox: JSON.parse(gateway.metadata).sandbox,
-  }));
+  const modifiedGateways: Gateway[] = gateways.map((gateway: any) => modifyGatewayInfo(gateway));
 
   return modifiedGateways;
 };
