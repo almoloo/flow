@@ -60,6 +60,12 @@ module flow_addr::flow_test {
         assert!(flow::get_gateway_info_label(gw2) == string::utf8(b"MyGateway2"), 20);
         assert!(flow::get_gateway_info_metadata(gw2) == string::utf8(b"Metadata2"), 21);
         assert!(flow::get_gateway_info_is_active(gw2) == true, 22);
+
+        let singleGw2 = flow::get_gateway_by_id(signer::address_of(bob), 2);
+        assert!(flow::get_gateway_info_id(&singleGw2) == 2, 19);
+        assert!(flow::get_gateway_info_label(&singleGw2) == string::utf8(b"MyGateway2"), 20);
+        assert!(flow::get_gateway_info_metadata(&singleGw2) == string::utf8(b"Metadata2"), 21);
+        assert!(flow::get_gateway_info_is_active(&singleGw2) == true, 22);
     }
 
     #[test(bob = @0x002)]

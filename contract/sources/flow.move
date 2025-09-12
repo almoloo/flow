@@ -140,6 +140,27 @@ module flow_addr::flow {
         result
     }
 
+    #[view]
+    public fun get_gateway_by_id(vendor_addr: address, gateway_id: u64): GatewayInfo acquires Vendor {
+        let vendor = borrow_global<Vendor>(vendor_addr);
+        let len = vendor.gateways.length();
+        let i = 0;
+        while (i < len) {
+            let gw = vendor.gateways.borrow(i);
+            if (gw.id == gateway_id) {
+                return GatewayInfo {
+                    id: gw.id,
+                    label: gw.label,
+                    metadata: gw.metadata,
+                    is_active: gw.is_active,
+                }
+            };
+            i += 1;
+        };
+        // If not found, abort
+        abort E_GATEWAY_NOT_FOUND
+    }
+
     // Getter functions for GatewayInfo
     public fun get_gateway_info_id(gw: &GatewayInfo): u64 {
         gw.id
