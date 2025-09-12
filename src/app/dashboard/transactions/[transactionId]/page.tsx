@@ -1,12 +1,12 @@
 "use client";
 
+import HrInfoLoading from "@/components/hr-info-loading";
+import HrInfoRow from "@/components/hr-info-row";
 import PageTitle from "@/components/page-title";
 import PrintButton from "@/components/print-button";
-import TxInfoLoading from "@/components/views/transaction/tx-info-loading";
-import TxInfoRow from "@/components/views/transaction/tx-info-row";
 import { formatAddress } from "@/lib/utils";
 import type { Transaction } from "@/types";
-import { getTransaction } from "@/view-functions/GetTransaction";
+import { getTransaction } from "@/view-functions/getTransaction";
 import { useEffect, useState } from "react";
 
 interface TransactionPageProps {
@@ -43,20 +43,20 @@ export default function TransactionPage({ params }: TransactionPageProps) {
       <PageTitle title="Transactions" segment={params.transactionId} />
       <div className="flex flex-col space-y-5">
         {isLoading ? (
-          <TxInfoLoading />
+          <HrInfoLoading />
         ) : transaction ? (
           <>
-            <TxInfoRow label="TXID" value={formatAddress(transaction.transactionId)} copyable />
-            <TxInfoRow label="Type" value={`${transaction.type} payment`} />
-            <TxInfoRow label="Gateway" value={transaction.gateway.title} />
-            <TxInfoRow label="Date" value={transaction.createdAt} />
-            <TxInfoRow label="Wallet" value={formatAddress(transaction.vendorAddress)} copyable />
+            <HrInfoRow label="TXID" value={formatAddress(transaction.transactionId)} copyable />
+            <HrInfoRow label="Type" value={`${transaction.type} payment`} />
+            <HrInfoRow label="Gateway" value={transaction.gateway.title} />
+            <HrInfoRow label="Date" value={transaction.createdAt} />
+            <HrInfoRow label="Wallet" value={formatAddress(transaction.vendorAddress)} copyable />
             {transaction.customer.email && (
-              <TxInfoRow label="Customer Email" value={transaction.customer.email} copyable />
+              <HrInfoRow label="Customer Email" value={transaction.customer.email} copyable />
             )}
-            <TxInfoRow label="Paid Amount" value={`${transaction.amount} ${transaction.currency}`} />
-            <TxInfoRow label="Received Amount" value={`${transaction.targetAmount} ${transaction.targetCurrency}`} />
-            <TxInfoRow label="Payer Fee" value={`${transaction.fee} APT`} />
+            <HrInfoRow label="Paid Amount" value={`${transaction.amount} ${transaction.currency}`} />
+            <HrInfoRow label="Received Amount" value={`${transaction.targetAmount} ${transaction.targetCurrency}`} />
+            <HrInfoRow label="Payer Fee" value={`${transaction.fee} APT`} />
 
             <div className="pt-10">
               <PrintButton label="Print Receipt" />

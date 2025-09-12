@@ -24,15 +24,15 @@ export default function PageTitle({ title, segment, actionLabel, actionIcon, act
         )}
       </div>
       {actionLabel && actionUrl && (
-        <Link href={actionUrl} passHref>
-          <Button>
+        <Button asChild>
+          <Link href={actionUrl}>
             {actionIcon &&
               (React.isValidElement(actionIcon)
                 ? React.cloneElement(actionIcon, { className: `${actionIcon.props.className ?? ""} size-5 mr-2` })
                 : actionIcon)}
             <span>{actionLabel}</span>
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       )}
     </div>
   );

@@ -3,6 +3,7 @@ import { getCollection } from "@/lib/db";
 import { getFile, uploadFile } from "@/lib/s3";
 import { revalidatePath } from "next/cache";
 import { generateImageUrl } from "@/lib/utils";
+import { withAuth } from "@/lib/authMiddleware";
 
 interface GatewayCollection {
   logoUrl: string;
@@ -10,7 +11,7 @@ interface GatewayCollection {
   gatewayId: string;
 }
 
-export async function GET(_req: NextRequest, { params }: { params: { walletAddress: string; gatewayId: string } }) {
+async function handleGET(_req: NextRequest, { params }: { params: { walletAddress: string; gatewayId: string } }) {
   const { walletAddress, gatewayId } = params;
 
   if (!walletAddress) {
@@ -46,7 +47,7 @@ export async function GET(_req: NextRequest, { params }: { params: { walletAddre
   });
 }
 
-export async function POST(_req: NextRequest, { params }: { params: { walletAddress: string; gatewayId: string } }) {
+async function handlePOST(_req: NextRequest, { params }: { params: { walletAddress: string; gatewayId: string } }) {
   const { walletAddress, gatewayId } = params;
 
   if (!walletAddress) {
@@ -81,3 +82,6 @@ export async function POST(_req: NextRequest, { params }: { params: { walletAddr
 
   return NextResponse.json({ logoUrl: url }, { status: 200 });
 }
+
+export const GET = withAuth(handleGET, { requireOwnWallet: false });
+export const POST = withAuth(handlePOST, { requireOwnWallet: true });

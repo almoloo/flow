@@ -11,9 +11,9 @@ export default function GatewaysEmptyState() {
           ready-to-withdraw balances.
         </p>
       </div>
-      <Link href="/dashboard/gateways/create" passHref>
-        <Button>Set Up My First Gateway</Button>
-      </Link>
+      <Button asChild>
+        <Link href="/dashboard/gateways/create">Set Up My First Gateway</Link>
+      </Button>
     </div>
   );
 }

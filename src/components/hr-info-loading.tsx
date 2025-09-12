@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function TxInfoLoading() {
+export default function HrInfoLoading() {
   return (
     <div className="flex flex-col space-y-5">
       {Array.from({ length: 9 }).map((_, idx) => (

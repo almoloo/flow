@@ -8,22 +8,42 @@ import DashboardSidebar from "@/components/views/dashboard/sidebar";
 import { useVendorInfo } from "@/hooks/useVendorInfo";
 import { useEffect, useState } from "react";
 import LoadingLayout from "@/components/views/dashboard/loading-layout";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { FingerprintIcon } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { connected, isLoading: loadingWallet } = useWallet();
+  const { isAuthenticated, authenticate, loading: loadingAuth } = useAuth();
   const { loading: loadingVendor, vendor, done: vendorDone } = useVendorInfo();
   const currentPath = usePathname();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isInit, setIsInit] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   if (!connected && !loadingWallet) {
     redirect("/");
   }
 
+  const initAuthentication = async () => {
+    if (connected && !isAuthenticated && !loadingAuth && !authChecked) {
+      try {
+        setAuthChecked(true);
+        await authenticate();
+      } catch (error) {
+        console.error("Authentication error:", error);
+      }
+    }
+  };
+
   useEffect(() => {
-    setIsLoading(loadingWallet || loadingVendor || !vendorDone);
-  }, [loadingWallet, loadingVendor, vendorDone]);
+    setIsLoading(loadingWallet || loadingVendor || !vendorDone || loadingAuth);
+  }, [loadingWallet, loadingVendor, vendorDone, loadingAuth]);
+
+  useEffect(() => {
+    initAuthentication();
+  }, [connected, isAuthenticated, loadingAuth, authenticate]);
 
   useEffect(() => {
     if (!isLoading && vendor) {
@@ -41,8 +61,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <LoadingLayout />
         ) : (
           <>
-            <DashboardSidebar className="lg:col-span-3" disabled={!isInit} path={currentPath} />
-            <main className="lg:col-span-9">{children}</main>
+            <DashboardSidebar className="lg:col-span-3" disabled={!isInit || !isAuthenticated} path={currentPath} />
+            <main className="lg:col-span-9">
+              {isAuthenticated ? (
+                children
+              ) : (
+                <>
+                  <div className="flex flex-col items-center justify-center h-full text-center">
+                    Please authenticate with your wallet to access the dashboard.
+                    <Button
+                      onClick={() => {
+                        setAuthChecked(false);
+                        initAuthentication();
+                      }}
+                      variant="outline"
+                      className="mt-4"
+                    >
+                      <FingerprintIcon className="mr-2" />
+                      Authenticate
+                    </Button>
+                  </div>
+                </>
+              )}
+            </main>
           </>
         )}
       </div>
