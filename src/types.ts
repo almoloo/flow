@@ -73,6 +73,21 @@ export interface AgentInfo {
   questions?: Question[];
 }
 
+export interface SupportKnowledgeBase {
+  vendorInfo?: AgentInfo;
+  paymentInfo?: {
+    acceptedTokens?: string[];
+    processingTime?: string;
+    fees?: string;
+  };
+  additionalContext?: Record<string, any>;
+}
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export interface Invoice {}
 
 export interface ShortLink {}

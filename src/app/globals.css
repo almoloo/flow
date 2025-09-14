@@ -85,3 +85,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .chat-message {
+    @apply p-4 rounded-xl text-sm max-w-[80%] whitespace-pre-wrap;
+  }
+  .chat-message.user {
+    @apply bg-indigo-500 rounded-br-sm text-slate-100 self-end;
+  }
+  .chat-message.assistant {
+    @apply bg-slate-200 rounded-bl-sm text-slate-800 self-start;
+  }
+  .chat-loading {
+    @apply bg-slate-200 rounded-full px-3 text-slate-800 self-start;
+  }
+}
