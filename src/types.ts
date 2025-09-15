@@ -90,6 +90,12 @@ export interface ChatMessage {
 
 export interface Invoice {}
 
-export interface ShortLink {}
+export interface ShortLink {
+  id: string;
+  walletAddress: string;
+  gatewayId: string;
+  amount: string;
+  active: boolean;
+}
 
 export interface Notification {}
