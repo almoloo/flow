@@ -16,7 +16,6 @@ export default function CreateShortLinkPage() {
   const [submitting, setSubmitting] = useState(false);
 
   async function onSubmit(data: z.infer<typeof shortLinkFormSchema>) {
-    console.log("Form submitted:", data);
     setSubmitting(true);
     try {
       const response = await authenticatedPost("/api/short-link", data);

@@ -11,7 +11,11 @@ export default function SlRow(sl: ShortLink) {
       <TableCell>{sl.amount} USDT</TableCell>
       <TableCell>{sl.gatewayId}</TableCell>
       <TableCell>
-        {sl.active ? <span className="text-emerald-500">Active</span> : <span className="text-rose-500">Inactive</span>}
+        {sl.active === "true" ? (
+          <span className="text-emerald-500">Active</span>
+        ) : (
+          <span className="text-rose-500">Inactive</span>
+        )}
       </TableCell>
       <TableCell className="py-0" align="right">
         <Button size="sm" variant="ghost" asChild>

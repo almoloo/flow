@@ -95,7 +95,7 @@ export interface ShortLink {
   walletAddress: string;
   gatewayId: string;
   amount: string;
-  active: boolean;
+  active: "true" | "false";
 }
 
 export interface Notification {}

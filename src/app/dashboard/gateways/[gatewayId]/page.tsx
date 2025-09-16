@@ -54,8 +54,6 @@ export default function EditGatewayPage({ params }: EditGatewayPageProps) {
   }, []);
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log("Form submitted:", data);
-
     setSubmitting(true);
 
     try {
