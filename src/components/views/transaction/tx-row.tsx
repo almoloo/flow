@@ -18,8 +18,10 @@ export default function TxRow(tx: Transaction) {
         {tx.targetAmount} {tx.targetCurrency}
       </TableCell>
       <TableCell>{tx.currency}</TableCell>
-      <TableCell>{tx.createdAt}</TableCell>
       <TableCell>{tx.gateway.title}</TableCell>
+      <TableCell>
+        <time dateTime={tx.createdAt}>{tx.createdAt} UTC</time>
+      </TableCell>
       <TableCell className={statusColor}>{tx.status}</TableCell>
       <TableCell className="py-0" align="right">
         <Button size="sm" variant="ghost" asChild>

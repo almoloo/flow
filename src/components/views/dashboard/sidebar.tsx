@@ -70,7 +70,7 @@ function Menu({ items, path, disabled }: { items: typeof menuItems; path: string
 
 export default function DashboardSidebar({ className, disabled, path }: DashboardSidebarProps) {
   return (
-    <aside className={`${className}`}>
+    <aside className={`${className} print:hidden`}>
       <div className="hidden lg:block">
         <Menu items={menuItems} path={path} disabled={disabled} />
       </div>

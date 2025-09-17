@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function DashboardFooter() {
   return (
-    <footer className="bg-white border-t border-slate-300 px-5 lg:px-10 py-3 flex items-center justify-between">
+    <footer className="bg-white border-t border-slate-300 px-5 lg:px-10 py-3 flex items-center justify-between print:hidden">
       <p className="font-mono text-xs flex items-center gap-2 text-indigo-300">
         <svg className="w-5 h-5 shrink-0 text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path

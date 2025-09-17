@@ -42,7 +42,7 @@ export interface Transaction {
   status: TransactionStatus;
   type: TransactionType;
   createdAt: string;
-  customer: Customer;
+  customer?: Customer;
   vendorAddress: string;
   gateway: Gateway;
   fee: string;
@@ -99,3 +99,10 @@ export interface ShortLink {
 }
 
 export interface Notification {}
+
+export interface Token {
+  name: string;
+  symbol: string;
+  address: string;
+  logoURI: string;
+}

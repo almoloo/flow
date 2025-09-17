@@ -1,4 +1,5 @@
 import type { Network } from "@aptos-labs/wallet-adapter-react";
+import { Token } from "./types";
 
 export const NETWORK: Network = (process.env.NEXT_PUBLIC_APP_NETWORK as Network) ?? "testnet";
 export const MODULE_ADDRESS = process.env.NEXT_PUBLIC_MODULE_ADDRESS;
@@ -15,3 +16,29 @@ export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
 export const MINIO_USE_SSL = process.env.MINIO_USE_SSL === "true";
 export const MINIO_BUCKET_NAME = process.env.MINIO_BUCKET_NAME;
 export const MINIO_REGION = process.env.MINIO_REGION;
+
+// TOKEN LIST
+export const availableTokens: Record<string, Token[]> = {
+  testnet: [
+    {
+      name: "Tether USD",
+      symbol: "USDT",
+      address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT",
+      logoURI: "https://example.com/usdt-logo.png",
+    },
+    {
+      name: "Bitcoin",
+      symbol: "BTC",
+      address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::BTC",
+      logoURI: "https://example.com/btc-logo.png",
+    },
+  ],
+  mainnet: [
+    {
+      name: "Tether USD",
+      symbol: "USDT",
+      address: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDT",
+      logoURI: "https://example.com/usdt-logo.png",
+    },
+  ],
+};
