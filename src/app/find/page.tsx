@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import PaymentFooter from "@/components/views/payment/footer";
 import PaymentHeader from "@/components/views/payment/header";
-import { authenticatedFetch } from "@/lib/authenticatedFetch";
 import { ShortLink } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, ScanSearchIcon } from "lucide-react";
