@@ -4,12 +4,10 @@ module flow_addr::flow {
     use std::signer;
     use std::error;
     use aptos_framework::event;
-
-    #[event]
-    struct VendorCreated has drop, store {
-        owner: address,
-        name: String,
-    }
+    use aptos_std::table::{Self, Table};
+    use aptos_framework::fungible_asset::{Self, Metadata};
+    use aptos_framework::primary_fungible_store;
+    use aptos_framework::object;
 
     struct Vendor has key {
         owner: address,
@@ -24,6 +22,7 @@ module flow_addr::flow {
         label: String,
         metadata: String,
         is_active: bool,
+        payments: Table<u64, Payment>,
     }
 
     struct GatewayInfo has copy, drop, store {
@@ -33,9 +32,34 @@ module flow_addr::flow {
         is_active: bool,
     }
 
+    struct Payment has store {
+        id: u64,
+        amount: u64,
+        gateway_id: u64,
+        withdrawn: bool,
+    }
+
+    #[event]
+    struct VendorCreated has drop, store {
+        owner: address,
+        name: String,
+    }
+
+    #[event]
+    struct PaymentEvent has drop, store {
+        vendor_addr: address,
+        payment_id: u64,
+        gateway_id: u64,
+        amount: u64,
+    }
+
     // Error codes
     const E_GATEWAY_NOT_FOUND: u64 = 1;
     const E_NOT_OWNER: u64 = 2;
+
+    const E_GATEWAY_NOT_ACTIVE: u64 = 3;
+    const E_PAYMENT_ID_EXISTS: u64 = 4;
+    const E_VENDOR_NOT_FOUND: u64 = 5;
 
     // ======================== Write functions ========================
 
@@ -76,6 +100,7 @@ module flow_addr::flow {
             id: new_id,
             label,
             metadata,
+            payments: table::new<u64, Payment>(),
             is_active: true,
         };
 
@@ -103,6 +128,65 @@ module flow_addr::flow {
                 gw.metadata = new_metadata;
                 gw.is_active = is_active;
                 found = true;
+                break;
+            };
+            i += 1;
+        };
+        assert!(found, error::not_found(E_GATEWAY_NOT_FOUND));
+    }
+
+    public entry fun pay_to_vendor(
+        sender: &signer,
+        vendor_addr: address,
+        gateway_id: u64,
+        payment_id: u64,
+        amount: u64
+    ) acquires Vendor {
+        let usdt_metadata = object::address_to_object<Metadata>(@0x357b0b74bc833e95a115ad22604854d6b0fca151cecd94111770e5d6ffc9dc2b);
+
+        assert!(exists<Vendor>(vendor_addr), error::not_found(E_VENDOR_NOT_FOUND));
+
+        // Ensure vendor has a USDT store
+        if (!primary_fungible_store::primary_store_exists(vendor_addr, usdt_metadata)) {
+            primary_fungible_store::create_primary_store(vendor_addr, usdt_metadata);
+        };
+
+        let vendor = borrow_global_mut<Vendor>(vendor_addr);
+        let len = vendor.gateways.length();
+        let i = 0;
+        let found = false;
+        let gateway = &mut vendor.gateways;
+
+        while (i < len) {
+            let gw = gateway.borrow_mut(i);
+            if (gw.id == gateway_id) {
+                assert!(gw.is_active, error::invalid_state(E_GATEWAY_NOT_ACTIVE));
+    
+                assert!(!table::contains(&gw.payments, payment_id), error::already_exists(E_PAYMENT_ID_EXISTS));
+                found = true;
+
+                // Transfer USDT to contract (vendor's address)
+                primary_fungible_store::transfer(sender, usdt_metadata, vendor_addr, amount);
+
+                // Store payment
+                let payment = Payment {
+                    id: payment_id,
+                    amount,
+                    gateway_id,
+                    withdrawn: false,
+                };
+                table::add(&mut gw.payments, payment_id, payment);
+
+                // Update vendor balance
+                vendor.balance += amount;
+
+                // Emit event
+                event::emit(PaymentEvent {
+                    vendor_addr,
+                    payment_id,
+                    gateway_id,
+                    amount,
+                });
                 break;
             };
             i += 1;
