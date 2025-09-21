@@ -9,6 +9,7 @@ import CustomerRowLoading from "@/components/views/customers/customer-row-loadin
 import { authenticatedGet, authenticatedPost } from "@/lib/authenticatedFetch";
 import { Customer, CustomerInfo } from "@/types";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { CloudDownloadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function CustomersPage() {
@@ -43,7 +44,24 @@ export default function CustomersPage() {
 
   return (
     <div>
-      <PageTitle title="Customers" />
+      <PageTitle
+        title="Customers"
+        actionLabel="Export to CSV"
+        actionIcon={<CloudDownloadIcon />}
+        actionOnClick={async () => {
+          if (account && account.address) {
+            const res = await authenticatedGet(`/api/customer/export`);
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `customers_${account.address}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        }}
+      />
       <Table>
         <TableHeader>
           <TableRow>
@@ -61,20 +79,6 @@ export default function CustomersPage() {
           ))}
         </TableBody>
       </Table>
-      <div>
-        <button
-          onClick={async () => {
-            const sampleCustomer: Customer = {
-              vendorAddress: account?.address.toString() || "",
-              address: "0xSampleCustomerAddress",
-              email: "sample@example.com",
-            };
-            await authenticatedPost(`/api/customer`, sampleCustomer);
-          }}
-        >
-          Add Customer
-        </button>
-      </div>
     </div>
   );
 }
