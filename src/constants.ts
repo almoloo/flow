@@ -18,7 +18,7 @@ export const MINIO_BUCKET_NAME = process.env.MINIO_BUCKET_NAME;
 export const MINIO_REGION = process.env.MINIO_REGION;
 
 // TOKEN LIST
-export const availableTokens: Record<string, Token[]> = {
+export const availableTokens: Record<Network, Token[]> = {
   testnet: [
     {
       name: "Tether USD",
@@ -41,4 +41,14 @@ export const availableTokens: Record<string, Token[]> = {
       logoURI: "https://example.com/usdt-logo.png",
     },
   ],
+  devnet: [
+    {
+      name: "Tether USD",
+      symbol: "USDT",
+      address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT",
+      logoURI: "https://example.com/usdt-logo.png",
+    },
+  ],
+  local: [],
+  custom: [],
 };

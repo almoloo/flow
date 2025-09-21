@@ -49,6 +49,7 @@ export interface Transaction {
 }
 
 export interface Customer {
+  vendorAddress: string;
   address: string;
   email?: string;
 }

@@ -9,9 +9,29 @@ interface PageTitleProps {
   actionLabel?: string;
   actionIcon?: React.ReactNode;
   actionUrl?: string;
+  actionOnClick?: () => any;
 }
 
-export default function PageTitle({ title, segment, actionLabel, actionIcon, actionUrl }: PageTitleProps) {
+function ButtonContent({ actionIcon, actionLabel }: { actionIcon?: React.ReactNode; actionLabel: string }) {
+  return (
+    <>
+      {actionIcon &&
+        (React.isValidElement(actionIcon)
+          ? React.cloneElement(actionIcon, { className: `${actionIcon.props.className ?? ""} size-5 mr-2` })
+          : actionIcon)}
+      <span>{actionLabel}</span>
+    </>
+  );
+}
+
+export default function PageTitle({
+  title,
+  segment,
+  actionLabel,
+  actionIcon,
+  actionUrl,
+  actionOnClick,
+}: PageTitleProps) {
   return (
     <div className="flex items-center justify-between mb-7 flex-wrap gap-2">
       <div className="flex items-center space-x-1 lg:space-x-2 shrink-0">
@@ -26,12 +46,13 @@ export default function PageTitle({ title, segment, actionLabel, actionIcon, act
       {actionLabel && actionUrl && (
         <Button asChild>
           <Link href={actionUrl}>
-            {actionIcon &&
-              (React.isValidElement(actionIcon)
-                ? React.cloneElement(actionIcon, { className: `${actionIcon.props.className ?? ""} size-5 mr-2` })
-                : actionIcon)}
-            <span>{actionLabel}</span>
+            <ButtonContent actionIcon={actionIcon} actionLabel={actionLabel} />
           </Link>
+        </Button>
+      )}
+      {actionLabel && !actionUrl && actionOnClick && (
+        <Button onClick={actionOnClick}>
+          <ButtonContent actionIcon={actionIcon} actionLabel={actionLabel} />
         </Button>
       )}
     </div>

@@ -3,6 +3,7 @@ import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { getTokenInfo } from "@/lib/utils";
 
 export default function TxRow(tx: Transaction) {
   let statusColor = "text-gray-500";
@@ -12,12 +13,15 @@ export default function TxRow(tx: Transaction) {
     statusColor = "text-rose-500";
   }
 
+  const sourceCurrency = getTokenInfo(tx.currency);
+  const targetCurrency = getTokenInfo(tx.targetCurrency);
+
   return (
     <TableRow>
       <TableCell>
-        {tx.targetAmount} {tx.targetCurrency}
+        {tx.targetAmount} {targetCurrency?.symbol || tx.targetCurrency}
       </TableCell>
-      <TableCell>{tx.currency}</TableCell>
+      <TableCell>{sourceCurrency?.symbol || tx.currency}</TableCell>
       <TableCell>{tx.gateway.title}</TableCell>
       <TableCell>
         <time dateTime={tx.createdAt}>{tx.createdAt} UTC</time>

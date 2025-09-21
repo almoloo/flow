@@ -4,7 +4,6 @@ import PageTitle from "@/components/page-title";
 import { formatAddress } from "@/lib/utils";
 import { CustomerInfo } from "@/types";
 import { useEffect, useState } from "react";
-import { getCustomer } from "@/view-functions/getCustomer";
 import { notFound } from "next/navigation";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import HrInfoLoading from "@/components/hr-info-loading";
@@ -13,6 +12,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components
 import TxRowLoading from "@/components/views/transaction/tx-row-loading";
 import TxEmptyState from "@/components/views/transaction/tx-empty-state";
 import TxRow from "@/components/views/transaction/tx-row";
+import { authenticatedGet } from "@/lib/authenticatedFetch";
 
 interface CustomerInfoPageProps {
   params: {
@@ -27,16 +27,23 @@ export default function CustomerInfoPage({ params }: CustomerInfoPageProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getCustomer(account?.address.toString()!, walletAddress);
-
-      if (!data) {
-        notFound();
-      }
-      setCustomer(data);
-      setIsLoading(false);
-    };
-    if (account) {
+    if (account && account.address && walletAddress) {
+      const fetchData = async () => {
+        setIsLoading(true);
+        try {
+          const res = await authenticatedGet(`/api/customer/${walletAddress}`);
+          if (res.status === 404) {
+            notFound();
+            return;
+          }
+          const jsonCustomer = (await res.json()) as CustomerInfo;
+          setCustomer(jsonCustomer);
+        } catch (error) {
+          console.error("Error fetching customer info:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
       fetchData();
     }
   }, [walletAddress, account]);
@@ -65,8 +72,8 @@ export default function CustomerInfoPage({ params }: CustomerInfoPageProps) {
             <TableRow>
               <TableHead>Amount</TableHead>
               <TableHead>Source Token</TableHead>
-              <TableHead>Date</TableHead>
               <TableHead>Gateway</TableHead>
+              <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead></TableHead>
             </TableRow>

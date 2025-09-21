@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { authenticatedPost } from "./authenticatedFetch";
 import { Gateway, GatewayInfo } from "@/types";
+import { availableTokens, NETWORK } from "@/constants";
+import { Network } from "@aptos-labs/wallet-adapter-react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -69,11 +71,6 @@ export function uploadVendorAvatar(avatar: File, address: string): Promise<strin
     const formData = new FormData();
     formData.append("avatar", avatar);
 
-    // const uploadAvatar = await fetch(`/api/image/vendor/${address}`, {
-    //   method: "POST",
-    //   body: formData,
-    // });
-
     const uploadAvatar = await authenticatedPost(`/api/image/vendor/${address}`, formData);
 
     if (uploadAvatar.ok) {
@@ -95,4 +92,9 @@ export function modifyGatewayInfo(gateway: GatewayInfo): Gateway {
     active: metadata.active,
     sandbox: metadata.sandbox,
   };
+}
+
+export function getTokenInfo(tokenAddress: string) {
+  const tokenList = availableTokens[NETWORK] || [];
+  return tokenList.find((token) => token.address === tokenAddress);
 }
