@@ -6,7 +6,7 @@ import PageTitle from "@/components/page-title";
 import PrintButton from "@/components/print-button";
 import { useToast } from "@/components/ui/use-toast";
 import { authenticatedGet } from "@/lib/authenticatedFetch";
-import { formatAddress } from "@/lib/utils";
+import { formatAddress, getTokenInfo } from "@/lib/utils";
 import type { Transaction } from "@/types";
 import { useEffect, useState } from "react";
 
@@ -72,8 +72,14 @@ export default function TransactionPage({ params }: TransactionPageProps) {
             {transaction.customer?.email && (
               <HrInfoRow label="Customer Email" value={transaction.customer?.email!} copyable />
             )}
-            <HrInfoRow label="Paid Amount" value={`${transaction.amount} ${transaction.currency}`} />
-            <HrInfoRow label="Received Amount" value={`${transaction.targetAmount} ${transaction.targetCurrency}`} />
+            <HrInfoRow
+              label="Paid Amount"
+              value={`${transaction.amount} ${getTokenInfo(transaction.currency)?.symbol || transaction.currency}`}
+            />
+            <HrInfoRow
+              label="Received Amount"
+              value={`${transaction.targetAmount} ${getTokenInfo(transaction.targetCurrency)?.symbol || transaction.targetCurrency}`}
+            />
             <HrInfoRow label="Payer Fee" value={`${transaction.fee} APT`} />
 
             <div className="pt-10 print:hidden">

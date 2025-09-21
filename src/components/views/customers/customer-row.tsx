@@ -1,5 +1,5 @@
 import { CustomerInfo } from "@/types";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, SquareCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -10,7 +10,7 @@ export default function CustomerRow(customer: CustomerInfo) {
     <TableRow>
       <TableCell>{formatAddress(customer.address)}</TableCell>
       <TableCell>{customer.transactions.length}</TableCell>
-      <TableCell>{customer.email ? "✅" : ""}</TableCell>
+      <TableCell>{customer.email ? <SquareCheckIcon className="text-emerald-500 size-5" /> : ""}</TableCell>
       <TableCell className="py-0" align="right">
         <Button size="sm" variant="ghost" asChild>
           <Link href={`/dashboard/customers/${customer.address}`}>
