@@ -8,6 +8,7 @@ module flow_addr::flow {
     use aptos_framework::fungible_asset::{Self, Metadata};
     use aptos_framework::primary_fungible_store;
     use aptos_framework::object;
+    use test_coins::coins::{USDT}; 
 
     struct Vendor has key {
         owner: address,
