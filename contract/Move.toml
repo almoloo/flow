@@ -9,8 +9,20 @@ flow_addr = "0x1234"
 [dependencies]
 AptosFramework = { git = "https://github.com/aptos-labs/aptos-framework.git", rev = "mainnet", subdir = "aptos-framework" }
 
+[dependencies.Liquidswap]
+git = 'https://github.com/pontem-network/liquidswap.git'
+rev = '0.4.4'
+
+[dependencies.LiquidswapRouterV2]
+git = 'https://github.com/pontem-network/liquidswap.git'
+subdir = 'liquidswap_router_v2/'
+rev = '0.4.4'
+
+[dependencies.LiquidswapLP]
+git = 'https://github.com/pontem-network/liquidswap.git'
+subdir = 'liquidswap_lp/'
+rev = '0.4.4'
+
 [dependencies.TestCoins]
 git = 'https://github.com/pontem-network/test-coins.git'
-rev = 'main'
-
-[dev-dependencies]
+rev = '0.1.4'

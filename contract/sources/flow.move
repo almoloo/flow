@@ -5,10 +5,9 @@ module flow_addr::flow {
     use std::error;
     use aptos_framework::event;
     use aptos_std::table::{Self, Table};
-    use aptos_framework::fungible_asset::{Self, Metadata};
-    use aptos_framework::primary_fungible_store;
-    use aptos_framework::object;
-    use test_coins::coins::{USDT}; 
+    use aptos_framework::coin;
+    
+    use test_coins::coins::USDT as TestUSDT;
 
     struct Vendor has key {
         owner: address,
@@ -61,6 +60,7 @@ module flow_addr::flow {
     const E_GATEWAY_NOT_ACTIVE: u64 = 3;
     const E_PAYMENT_ID_EXISTS: u64 = 4;
     const E_VENDOR_NOT_FOUND: u64 = 5;
+    const E_VENDOR_NOT_REGISTERED: u64 = 6;
 
     // ======================== Write functions ========================
 
@@ -136,6 +136,14 @@ module flow_addr::flow {
         assert!(found, error::not_found(E_GATEWAY_NOT_FOUND));
     }
 
+    public entry fun register_vendor(
+        vendor: &signer
+    ) {
+        if (!coin::is_account_registered<TestUSDT>(signer::address_of(vendor))) {
+            coin::register<TestUSDT>(vendor);
+        };
+    }
+
     public entry fun pay_to_vendor(
         sender: &signer,
         vendor_addr: address,
@@ -143,14 +151,13 @@ module flow_addr::flow {
         payment_id: u64,
         amount: u64
     ) acquires Vendor {
-        let usdt_metadata = object::address_to_object<Metadata>(@0x357b0b74bc833e95a115ad22604854d6b0fca151cecd94111770e5d6ffc9dc2b);
-
         assert!(exists<Vendor>(vendor_addr), error::not_found(E_VENDOR_NOT_FOUND));
 
-        // Ensure vendor has a USDT store
-        if (!primary_fungible_store::primary_store_exists(vendor_addr, usdt_metadata)) {
-            primary_fungible_store::create_primary_store(vendor_addr, usdt_metadata);
-        };
+        assert!(
+            coin::is_account_registered<TestUSDT>(vendor_addr),
+            error::invalid_state(E_VENDOR_NOT_REGISTERED)
+        );
+
 
         let vendor = borrow_global_mut<Vendor>(vendor_addr);
         let len = vendor.gateways.length();
@@ -166,8 +173,7 @@ module flow_addr::flow {
                 assert!(!table::contains(&gw.payments, payment_id), error::already_exists(E_PAYMENT_ID_EXISTS));
                 found = true;
 
-                // Transfer USDT to contract (vendor's address)
-                primary_fungible_store::transfer(sender, usdt_metadata, vendor_addr, amount);
+                coin::transfer<TestUSDT>(sender, vendor_addr, amount);
 
                 // Store payment
                 let payment = Payment {
