@@ -3,7 +3,6 @@ import { twMerge } from "tailwind-merge";
 import { authenticatedPost } from "./authenticatedFetch";
 import { Gateway, GatewayInfo } from "@/types";
 import { availableTokens, NETWORK } from "@/constants";
-import { Network } from "@aptos-labs/wallet-adapter-react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
