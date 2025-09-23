@@ -143,6 +143,10 @@ module flow_addr::flow {
             coin::register<TestUSDT>(vendor);
         };
     }
+    
+    public fun is_vendor_registered(vendor_addr: address): bool {
+        coin::is_account_registered<TestUSDT>(vendor_addr)
+    }
 
     public entry fun pay_to_vendor(
         sender: &signer,
