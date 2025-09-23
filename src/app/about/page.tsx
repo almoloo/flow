@@ -8,7 +8,7 @@ export default function AboutPage() {
     <div className="bg-slate-100 min-h-screen py-5 lg:p-10">
       <div className="container flex flex-col px-5">
         <HomepageHeader className="text-indigo-700 mb-5 lg:mb-10" />
-        <div className="p-10 bg-white rounded-3xl space-y-10 mb-5">
+        <div className="px-10 py-14 lg:p-20 bg-white rounded-3xl space-y-10 mb-5">
           <section>
             <span className="text-sm text-indigo-600 font-medium">About Us</span>
             <h2 className="text-2xl font-semibold mt-2 mb-3">The team behind your next favorite payment solution.</h2>

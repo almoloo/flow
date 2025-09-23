@@ -12,11 +12,11 @@ interface TeamItemProps {
 
 export default function TeamItem({ name, role, imageUrl, githubUrl }: TeamItemProps) {
   return (
-    <div className="rounded-full p-2 bg-indigo-100 flex items-center gap-3 shrink-0">
+    <div className="rounded-full p-2 bg-indigo-100 flex items-center gap-3 shrink-0 max-w-full">
       <Image src={imageUrl} alt={name} width={60} height={60} className="rounded-full" />
       <div>
         <h3 className="font-semibold text-lg">{name}</h3>
-        <span className="text-xs text-slate-600">{role}</span>
+        <span className="text-xs text-slate-600 line-clamp-1 text-ellipsis w-full">{role}</span>
       </div>
       <Button variant="link" size="icon" className="mx-3" asChild>
         <Link href={githubUrl} target="_blank">
