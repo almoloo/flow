@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CustomerInfo, Transaction } from "@/types";
+import { Transaction } from "@/types";
 import { withAuth } from "@/lib/authMiddleware";
 import { getCollection } from "@/lib/db";
 
