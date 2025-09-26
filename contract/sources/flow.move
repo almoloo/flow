@@ -6,8 +6,12 @@ module flow_addr::flow {
     use aptos_framework::event;
     use aptos_std::table::{Self, Table};
     use aptos_framework::coin;
-    
+    use aptos_framework::aptos_coin::AptosCoin;
+
+    use liquidswap::router_v2;
+    use liquidswap::curves::Uncorrelated;
     use test_coins::coins::USDT as TestUSDT;
+
 
     struct Vendor has key {
         owner: address,
@@ -162,7 +166,6 @@ module flow_addr::flow {
             error::invalid_state(E_VENDOR_NOT_REGISTERED)
         );
 
-
         let vendor = borrow_global_mut<Vendor>(vendor_addr);
         let len = vendor.gateways.length();
         let i = 0;
@@ -204,6 +207,72 @@ module flow_addr::flow {
         };
         assert!(found, error::not_found(E_GATEWAY_NOT_FOUND));
     }
+
+    // ======================= swipe ===========================
+    public entry fun pay_to_vendor_apt(
+        sender: &signer, 
+        vendor_addr: address,
+        gateway_id: u64,
+        payment_id: u64,
+        aptos_amount_to_swap: u64) acquires Vendor {
+
+            assert!(exists<Vendor>(vendor_addr), error::not_found(E_VENDOR_NOT_FOUND));
+
+            assert!(
+                coin::is_account_registered<TestUSDT>(vendor_addr),
+                error::invalid_state(E_VENDOR_NOT_REGISTERED)
+            );
+
+            let vendor = borrow_global_mut<Vendor>(vendor_addr);
+            let len = vendor.gateways.length();
+            let i = 0;
+            let found = false;
+            let gateway = &mut vendor.gateways;
+
+            while (i < len) {
+                let gw = gateway.borrow_mut(i);
+                if (gw.id == gateway_id) {
+                    assert!(gw.is_active, error::invalid_state(E_GATEWAY_NOT_ACTIVE));
+        
+                    assert!(!table::contains(&gw.payments, payment_id), error::already_exists(E_PAYMENT_ID_EXISTS));
+                    found = true;
+
+                    let aptos_coins_to_swap = coin::withdraw<AptosCoin>(sender, aptos_amount_to_swap);
+                    let usdt_amount_to_get = router_v2::get_amount_out<AptosCoin, TestUSDT, Uncorrelated>(
+                        aptos_amount_to_swap,
+                    );
+
+                    let btc = router_v2::swap_exact_coin_for_coin<AptosCoin, TestUSDT, Uncorrelated>(
+                        aptos_coins_to_swap,
+                        usdt_amount_to_get
+                    );
+
+                    // Store payment
+                    let payment = Payment {
+                        id: payment_id,
+                        amount: usdt_amount_to_get,
+                        gateway_id,
+                        withdrawn: false,
+                    };
+                    table::add(&mut gw.payments, payment_id, payment);
+
+                    // Update vendor balance
+                    vendor.balance += usdt_amount_to_get;
+                    coin::deposit(vendor_addr, btc);
+
+                    // Emit event
+                    event::emit(PaymentEvent {
+                        vendor_addr,
+                        payment_id,
+                        gateway_id,
+                        amount: usdt_amount_to_get,
+                    });
+                    break;
+                };
+                i += 1;
+            };
+            assert!(found, error::not_found(E_GATEWAY_NOT_FOUND));   
+        }
 
     // ======================== Read functions ========================
     #[view]
