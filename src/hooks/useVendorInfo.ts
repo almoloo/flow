@@ -58,7 +58,8 @@ export function useVendorInfo() {
         const vendorInfo = await getVendorInfo(account.address.toString());
 
         if (!vendorInfo) {
-          throw new Error("Vendor name not found");
+          // throw new Error("Vendor name not found");
+          return;
         }
 
         setVendorInfo({
