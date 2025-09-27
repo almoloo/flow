@@ -83,5 +83,5 @@ async function handlePOST(_req: NextRequest, { params }: { params: { walletAddre
   return NextResponse.json({ logoUrl: url }, { status: 200 });
 }
 
-export const GET = withAuth(handleGET, { requireOwnWallet: false });
+export const GET = handleGET;
 export const POST = withAuth(handlePOST, { requireOwnWallet: true });
