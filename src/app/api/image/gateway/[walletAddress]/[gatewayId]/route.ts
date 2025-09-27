@@ -58,7 +58,16 @@ async function handlePOST(_req: NextRequest, { params }: { params: { walletAddre
     return NextResponse.json({ error: "Gateway ID is required" }, { status: 400 });
   }
 
-  const formData = await _req.formData();
+  let formData;
+  try {
+    formData = await _req.formData();
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Invalid form data. Please ensure you're sending multipart/form-data" },
+      { status: 400 },
+    );
+  }
+
   const logo = formData.get("logo") as File | null;
 
   if (!logo) {
