@@ -22,12 +22,16 @@ export async function authenticatedFetch(url: string, options: AuthenticatedFetc
     throw new Error("No authentication token available. Please authenticate first.");
   }
 
-  // Add authorization header
-  const headers = {
-    "Content-Type": "application/json",
-    ...fetchOptions.headers,
+  // Add authorization header - don't override Content-Type if body is FormData
+  const headers: HeadersInit = {
+    ...(fetchOptions.headers || {}),
     Authorization: `Bearer ${token}`,
   };
+
+  // Only add Content-Type: application/json if body is not FormData
+  if (!(fetchOptions.body instanceof FormData)) {
+    (headers as Record<string, string>)["Content-Type"] = "application/json";
+  }
 
   return fetch(url, {
     ...fetchOptions,
@@ -46,9 +50,11 @@ export async function authenticatedGet(url: string, authToken?: string): Promise
  * Helper function for authenticated POST requests
  */
 export async function authenticatedPost(url: string, data: any, authToken?: string): Promise<Response> {
+  const body = data instanceof FormData ? data : JSON.stringify(data);
+
   return authenticatedFetch(url, {
     method: "POST",
-    body: JSON.stringify(data),
+    body,
     authToken,
   });
 }

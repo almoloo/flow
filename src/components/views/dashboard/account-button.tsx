@@ -17,15 +17,22 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { ChevronDownIcon, LoaderIcon, LogOutIcon, UserPenIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AccountButton() {
   const { disconnect, account, isLoading: isLoadingAccount } = useWallet();
   const { loading: isLoadingVendor, vendor } = useVendorInfo();
+  const { clearAuth } = useAuth();
 
   const [vendorName, setVendorName] = useState<string>("");
   const [vendorAddress, setVendorAddress] = useState<string>("");
   const [vendorAvatar, setVendorAvatar] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(isLoadingAccount || isLoadingVendor);
+
+  const logout = () => {
+    disconnect();
+    clearAuth();
+  };
 
   useEffect(() => {
     setIsLoading(isLoadingAccount || isLoadingVendor);
@@ -80,7 +87,7 @@ export default function AccountButton() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="cursor-pointer text-rose-500" onSelect={disconnect}>
+          <DropdownMenuItem className="cursor-pointer text-rose-500" onSelect={logout}>
             <LogOutIcon className="size-5 mr-2" />
             Logout
           </DropdownMenuItem>
