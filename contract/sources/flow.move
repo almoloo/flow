@@ -79,7 +79,12 @@ module flow_addr::flow {
             balance: 0,
             gateways: vector::empty<Gateway>(),
         };
+
         move_to(sender, vendor);
+
+        if (!coin::is_account_registered<TestUSDT>(signer::address_of(sender))) {
+            coin::register<TestUSDT>(sender);
+        };
 
         event::emit(VendorCreated { owner: signer::address_of(sender), name: vendor_name });
     }
