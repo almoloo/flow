@@ -17,8 +17,8 @@ import {
 import { ArrowLeft, ArrowRight, ChevronDown } from "lucide-react";
 
 interface ConnectWalletDialogProps {
-  close: () => void;
-  redirect: () => void;
+  close?: () => void;
+  redirect?: () => void;
 }
 
 export default function ConnectWalletDialog({ redirect }: ConnectWalletDialogProps) {

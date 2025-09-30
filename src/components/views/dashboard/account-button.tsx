@@ -44,7 +44,7 @@ export default function AccountButton() {
       setVendorAddress(vendor.address);
       setVendorAvatar(vendor.avatar!);
     } else {
-      setVendorName("?!");
+      setVendorName(account?.address.toString().slice(0, 6) ?? "?!");
       setVendorAddress(account?.address.toString() ?? "");
       setVendorAvatar(generateImageUrl(account?.address.toString() ?? "?!", "vendor"));
     }

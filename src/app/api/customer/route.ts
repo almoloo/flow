@@ -81,4 +81,4 @@ async function handlePOST(_req: NextRequest, _ctx: any, _authPayload: any) {
 }
 
 export const GET = withAuth(handleGET, { requireOwnWallet: true });
-export const POST = withAuth(handlePOST, { requireOwnWallet: false });
+export const POST = handlePOST;

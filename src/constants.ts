@@ -21,34 +21,29 @@ export const MINIO_REGION = process.env.MINIO_REGION;
 export const availableTokens: Record<Network, Token[]> = {
   testnet: [
     {
+      name: "Aptos",
+      symbol: "APT",
+      address: "0x1::aptos_coin::AptosCoin",
+      logoURI: "https://raw.githubusercontent.com/pontem-network/coins-registry/main/src/coins-logos/apt.svg",
+      decimals: 8,
+    },
+    {
       name: "Tether USD",
       symbol: "USDT",
       address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT",
-      logoURI: "https://example.com/usdt-logo.png",
+      logoURI: "https://raw.githubusercontent.com/pontem-network/coins-registry/main/src/coins-logos/usdt.svg",
+      decimals: 6,
     },
     {
       name: "Bitcoin",
       symbol: "BTC",
       address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::BTC",
-      logoURI: "https://example.com/btc-logo.png",
+      logoURI: "https://raw.githubusercontent.com/pontem-network/coins-registry/main/src/coins-logos/btc.svg",
+      decimals: 8,
     },
   ],
-  mainnet: [
-    {
-      name: "Tether USD",
-      symbol: "USDT",
-      address: "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDT",
-      logoURI: "https://example.com/usdt-logo.png",
-    },
-  ],
-  devnet: [
-    {
-      name: "Tether USD",
-      symbol: "USDT",
-      address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT",
-      logoURI: "https://example.com/usdt-logo.png",
-    },
-  ],
+  mainnet: [],
+  devnet: [],
   local: [],
   custom: [],
 };

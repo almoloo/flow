@@ -1,6 +1,7 @@
 import ChatBox from "@/components/views/payment/chat-box";
 import PaymentFooter from "@/components/views/payment/footer";
 import PaymentHeader from "@/components/views/payment/header";
+import WalletStatus from "@/components/views/payment/wallet-status";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,13 +13,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <h2 className="font-semibold text-lg">Complete Your Payment</h2>
             <p className="text-slate-600">Follow the steps below to securely complete your payment.</p>
           </div>
-          <div>Disconnected</div>
+          <div>
+            <WalletStatus />
+          </div>
         </aside>
         <main className="flex flex-col-reverse md:grid md:grid-cols-3 h-[60vh]">
           <section className="bg-slate-50 border-r border-slate-200 h-[60vh]">
             <ChatBox />
           </section>
-          <section className="md:col-span-2 p-10">{children}</section>
+          <section className="flex flex-col h-full md:col-span-2 p-10">{children}</section>
         </main>
       </section>
       <PaymentFooter />

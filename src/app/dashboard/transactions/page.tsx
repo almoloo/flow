@@ -59,7 +59,7 @@ export default function TransactionsPage() {
           {isLoading && <TxRowLoading />}
           {!isLoading && transactions.length === 0 && <TxEmptyState />}
           {transactions.map((tx) => (
-            <TxRow key={tx.transactionId} {...tx} />
+            <TxRow key={tx.paymentId} {...tx} />
           ))}
         </TableBody>
       </Table>

@@ -5,12 +5,12 @@ import { getGateways } from "@/view-functions/getGateways";
 import { NextRequest, NextResponse } from "next/server";
 
 // ADD NEW TRANSACTION
-async function handlePOST(_req: NextRequest, _ctx: any, authPayload: any) {
+async function handlePOST(_req: NextRequest, _ctx: any, _authPayload: any) {
   const collection = await getCollection("transactions");
   const data = await _req.json();
   const transaction: Partial<Transaction> = data.body;
   transaction.createdAt = new Date().toISOString();
-  transaction.vendorAddress = authPayload.walletAddress.toLowerCase();
+  // transaction.vendorAddress = authPayload.walletAddress.toLowerCase();
   const result = await collection.insertOne(transaction);
   return NextResponse.json({ ...transaction, _id: result.insertedId }, { status: 201 });
 }
@@ -37,5 +37,5 @@ async function handleGET(_req: NextRequest, _ctx: any, authPayload: any) {
   return NextResponse.json(transactions);
 }
 
-export const POST = withAuth(handlePOST, { requireOwnWallet: true });
+export const POST = handlePOST;
 export const GET = withAuth(handleGET, { requireOwnWallet: true });

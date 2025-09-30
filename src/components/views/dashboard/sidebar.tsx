@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   BanknoteArrowDownIcon,
-  BanknoteArrowUpIcon,
+  // BanknoteArrowUpIcon,
   BotMessageSquareIcon,
   ChevronRightIcon,
   CircleUserIcon,
@@ -24,7 +24,7 @@ const menuItems = [
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboardIcon /> },
   { label: "Gateways", href: "/dashboard/gateways", icon: <QrCodeIcon /> },
   { label: "Transactions", href: "/dashboard/transactions", icon: <BanknoteArrowDownIcon /> },
-  { label: "Withdrawals", href: "/dashboard/withdrawals", icon: <BanknoteArrowUpIcon /> },
+  // { label: "Withdrawals", href: "/dashboard/withdrawals", icon: <BanknoteArrowUpIcon /> },
   { label: "Customers", href: "/dashboard/customers", icon: <CircleUserIcon /> },
   { label: "Invoices", href: "/dashboard/invoices", icon: <ReceiptIcon /> },
   { label: "Short Links", href: "/dashboard/short-links", icon: <HashIcon /> },
