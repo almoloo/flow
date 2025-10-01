@@ -39,6 +39,75 @@ ${paymentInfo.fees ? `Fees: ${paymentInfo.fees}` : ""}`;
     });
   }
 
+  // Add comprehensive gateway information
+  prompt += `\n\nGATEWAY SYSTEM INFORMATION:
+
+WHAT IS FLOW PAYMENT GATEWAY:
+Flow is a comprehensive payment gateway built on the Aptos blockchain that enables vendors to accept multiple cryptocurrencies while receiving stable USDT. The platform features automatic token swapping, AI-powered customer support, and comprehensive analytics.
+
+SUPPORTED TOKENS:
+- APT (Aptos) - Native Aptos blockchain token
+- USDT (Tether USD) - Stablecoin for settlements
+- BTC (Bitcoin) - Popular cryptocurrency
+- All payments are automatically converted to USDT for vendor settlement
+
+PAYMENT PROCESS:
+1. Customer visits payment link: /payment?va={vendor_address}&gid={gateway_id}&amount={usdt_amount}
+2. Customer selects their preferred token (APT, BTC, or USDT)
+3. System calculates exchange rate using Liquidswap DEX
+4. Customer pays in their chosen token
+5. Tokens are automatically swapped to USDT (if needed)
+6. Vendor receives USDT in their wallet
+7. Transaction is recorded in the system
+
+GATEWAY FEATURES:
+- Multi-token payment acceptance
+- Automatic token conversion via Liquidswap DEX
+- Real-time exchange rate calculation
+- Secure blockchain transactions
+- Transaction history tracking
+- Customer management
+- Payment link generation
+- Short link creation for easy sharing
+
+PAYMENT LINKS:
+- Standard format: https://flow.almoloo.com/payment?va={vendor_address}&gid={gateway_id}&amount={usdt_amount}
+- Short link format: https://flow.almoloo.com/p/{short_id}
+- Links can be shared via social media, email, or QR codes
+
+GATEWAY MANAGEMENT:
+- Vendors can create multiple gateways for different purposes
+- Each gateway has a unique ID and can be activated/deactivated
+- Gateways can have custom labels and metadata
+- Transaction history is tracked per gateway
+
+FEES AND PROCESSING:
+- Processing is typically instant on Aptos blockchain
+- Gas fees apply for blockchain transactions
+- Exchange rates are determined by Liquidswap DEX
+- No additional platform fees beyond blockchain costs
+
+TECHNICAL SPECIFICATIONS:
+- Built on Aptos blockchain (testnet/mainnet)
+- Smart contract handles payment processing
+- Uses Liquidswap for token swapping
+- Supports wallet connections (Petra, Pontem, etc.)
+- PWA-ready responsive interface
+
+TROUBLESHOOTING COMMON ISSUES:
+- "Payment failed": Usually due to insufficient gas fees or incorrect token balance
+- "Gateway not found": Check if gateway ID is correct and gateway is active
+- "Wallet connection issues": Ensure wallet is installed and connected to correct network
+- "Token not supported": Only APT, USDT, and BTC are currently supported
+- "Transaction pending": Blockchain confirmation may take a few seconds
+
+CUSTOMER SUPPORT FEATURES:
+- AI-powered chat support
+- Transaction status tracking
+- Real-time payment notifications
+- Customer information management
+- Export capabilities for transaction data`;
+
   if (additionalContext) {
     prompt += "\n\nADDITIONAL CONTEXT:";
     Object.entries(additionalContext).forEach(([key, value]) => {
@@ -47,7 +116,7 @@ ${paymentInfo.fees ? `Fees: ${paymentInfo.fees}` : ""}`;
   }
 
   prompt +=
-    "\n\nRemember to always be helpful and say \"I'm sorry, I can't assist with that.\" when you don't have enough information. DO NOT make up answers. DO NOT HALLUCINATE.";
+    "\n\nRemember to always be helpful and say \"I'm sorry, I can't assist with that.\" when you don't have enough information. DO NOT make up answers. DO NOT HALLUCINATE. Use the gateway information provided to answer questions about payments, supported tokens, processing times, and technical issues.";
   return prompt;
 }
 
