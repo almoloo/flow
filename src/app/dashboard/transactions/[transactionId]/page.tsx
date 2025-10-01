@@ -61,7 +61,7 @@ export default function TransactionPage({ params }: TransactionPageProps) {
               fullValue={transaction.transactionId}
             />
             <HrInfoRow label="Type" value={`${transaction.type} payment`} />
-            <HrInfoRow label="Gateway" value={transaction.gateway.title} />
+            <HrInfoRow label="Gateway" value={transaction.gateway.title || ""} />
             <HrInfoRow label="Date" value={`${transaction.createdAt} UTC`} />
             <HrInfoRow
               label="Wallet"
