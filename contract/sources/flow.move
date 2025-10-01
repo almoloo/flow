@@ -335,6 +335,7 @@ module flow_addr::flow {
                     );
                 }   
                 else if (*string::bytes(&token) == *string::bytes(&string::utf8(b"USDT"))) {
+                    usdt_amount_to_get = coin_amount;
                     usdt = coin::withdraw<TestUSDT>(sender, coin_amount);
                 }
                 else
