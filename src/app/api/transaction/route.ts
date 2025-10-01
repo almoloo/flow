@@ -17,11 +17,27 @@ async function handlePOST(_req: NextRequest, _ctx: any, _authPayload: any) {
 
 // GET TRANSACTIONS FOR A VENDOR
 async function handleGET(_req: NextRequest, _ctx: any, authPayload: any) {
+  // get query string "count" if exists
+  const { searchParams } = new URL(_req.url);
+  const countParam = searchParams.get("count");
+  const count = countParam ? parseInt(countParam, 10) : null;
+
   const collection = await getCollection("transactions");
-  const transactions = await collection
-    .find({ vendorAddress: authPayload.walletAddress.toLowerCase() })
-    .sort({ createdAt: -1 })
-    .toArray();
+
+  let transactions;
+
+  if (count) {
+    transactions = await collection
+      .find({ vendorAddress: authPayload.walletAddress.toLowerCase() })
+      .sort({ createdAt: -1 })
+      .limit(count)
+      .toArray();
+  } else {
+    transactions = await collection
+      .find({ vendorAddress: authPayload.walletAddress.toLowerCase() })
+      .sort({ createdAt: -1 })
+      .toArray();
+  }
 
   const gateways = await getGateways(authPayload.walletAddress);
 

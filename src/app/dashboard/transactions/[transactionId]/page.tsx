@@ -80,7 +80,7 @@ export default function TransactionPage({ params }: TransactionPageProps) {
               label="Received Amount"
               value={`${transaction.targetAmount} ${getTokenInfo(transaction.targetCurrency)?.symbol || transaction.targetCurrency}`}
             />
-            <HrInfoRow label="Payer Fee" value={`${transaction.fee} APT`} />
+            {Number(transaction.fee) > 0 && <HrInfoRow label="Payer Fee" value={`${transaction.fee} APT`} />}
 
             <div className="pt-10 print:hidden">
               <PrintButton label="Print Receipt" />
