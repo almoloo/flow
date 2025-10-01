@@ -5,23 +5,39 @@ import { getGateways } from "@/view-functions/getGateways";
 import { NextRequest, NextResponse } from "next/server";
 
 // ADD NEW TRANSACTION
-async function handlePOST(_req: NextRequest, _ctx: any, authPayload: any) {
+async function handlePOST(_req: NextRequest, _ctx: any, _authPayload: any) {
   const collection = await getCollection("transactions");
   const data = await _req.json();
   const transaction: Partial<Transaction> = data.body;
   transaction.createdAt = new Date().toISOString();
-  transaction.vendorAddress = authPayload.walletAddress.toLowerCase();
+  // transaction.vendorAddress = authPayload.walletAddress.toLowerCase();
   const result = await collection.insertOne(transaction);
   return NextResponse.json({ ...transaction, _id: result.insertedId }, { status: 201 });
 }
 
 // GET TRANSACTIONS FOR A VENDOR
 async function handleGET(_req: NextRequest, _ctx: any, authPayload: any) {
+  // get query string "count" if exists
+  const { searchParams } = new URL(_req.url);
+  const countParam = searchParams.get("count");
+  const count = countParam ? parseInt(countParam, 10) : null;
+
   const collection = await getCollection("transactions");
-  const transactions = await collection
-    .find({ vendorAddress: authPayload.walletAddress.toLowerCase() })
-    .sort({ createdAt: -1 })
-    .toArray();
+
+  let transactions;
+
+  if (count) {
+    transactions = await collection
+      .find({ vendorAddress: authPayload.walletAddress.toLowerCase() })
+      .sort({ createdAt: -1 })
+      .limit(count)
+      .toArray();
+  } else {
+    transactions = await collection
+      .find({ vendorAddress: authPayload.walletAddress.toLowerCase() })
+      .sort({ createdAt: -1 })
+      .toArray();
+  }
 
   const gateways = await getGateways(authPayload.walletAddress);
 
@@ -37,5 +53,5 @@ async function handleGET(_req: NextRequest, _ctx: any, authPayload: any) {
   return NextResponse.json(transactions);
 }
 
-export const POST = withAuth(handlePOST, { requireOwnWallet: true });
+export const POST = handlePOST;
 export const GET = withAuth(handleGET, { requireOwnWallet: true });

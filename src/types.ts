@@ -34,6 +34,7 @@ export enum TransactionStatus {
 }
 
 export interface Transaction {
+  paymentId: number;
   transactionId: string;
   amount: string;
   currency: string;
@@ -42,9 +43,9 @@ export interface Transaction {
   status: TransactionStatus;
   type: TransactionType;
   createdAt: string;
-  customer?: Customer;
+  customer?: Partial<Customer>;
   vendorAddress: string;
-  gateway: Gateway;
+  gateway: Partial<Gateway>;
   fee: string;
 }
 
@@ -106,4 +107,5 @@ export interface Token {
   symbol: string;
   address: string;
   logoURI: string;
+  decimals?: number;
 }

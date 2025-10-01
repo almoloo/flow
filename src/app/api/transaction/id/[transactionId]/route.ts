@@ -12,7 +12,7 @@ async function handleGET(_req: NextRequest, { params }: { params: { transactionI
   }
   const collection = await getCollection("transactions");
   const transaction = await collection.findOne({
-    transactionId,
+    paymentId: Number(transactionId),
     vendorAddress: authPayload.walletAddress.toLowerCase(),
   });
 

@@ -34,6 +34,7 @@ async function handleGET(_req: NextRequest, _ctx: any, authPayload: any) {
         gateways.find((g) => g.gatewayId === tx.gateway.gatewayId) ||
         ({ gatewayId: tx.gateway.gatewayId as string, title: tx.gateway.gatewayId as string } as Gateway),
       fee: tx.fee,
+      paymentId: tx.paymentId,
     }));
 
     const totalSpent = transactions.reduce((sum, tx) => sum + parseFloat(tx.targetAmount), 0).toFixed(2);
@@ -81,4 +82,4 @@ async function handlePOST(_req: NextRequest, _ctx: any, _authPayload: any) {
 }
 
 export const GET = withAuth(handleGET, { requireOwnWallet: true });
-export const POST = withAuth(handlePOST, { requireOwnWallet: false });
+export const POST = handlePOST;

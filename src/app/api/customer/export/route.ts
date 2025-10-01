@@ -32,6 +32,7 @@ async function handleGET(_req: NextRequest, _ctx: any, authPayload: any) {
       vendorAddress: tx.vendorAddress,
       gateway: tx.gateway,
       fee: tx.fee,
+      paymentId: tx.paymentId,
     }));
 
     const totalSpent = transactions.reduce((sum, tx) => sum + parseFloat(tx.targetAmount), 0).toFixed(2);

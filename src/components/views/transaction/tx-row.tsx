@@ -29,7 +29,7 @@ export default function TxRow(tx: Transaction) {
       <TableCell className={statusColor}>{tx.status}</TableCell>
       <TableCell className="py-0" align="right">
         <Button size="sm" variant="ghost" asChild>
-          <Link href={`/dashboard/transactions/${tx.transactionId}`}>
+          <Link href={`/dashboard/transactions/${tx.paymentId}`}>
             <ChevronRightIcon className="size-5" />
           </Link>
         </Button>

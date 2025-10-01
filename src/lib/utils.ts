@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { authenticatedPost } from "./authenticatedFetch";
-import { Gateway, GatewayInfo } from "@/types";
+import { Gateway, GatewayInfo, Transaction } from "@/types";
 import { availableTokens, NETWORK } from "@/constants";
 
 export function cn(...inputs: ClassValue[]) {
@@ -96,4 +96,63 @@ export function modifyGatewayInfo(gateway: GatewayInfo): Gateway {
 export function getTokenInfo(tokenAddress: string) {
   const tokenList = availableTokens[NETWORK] || [];
   return tokenList.find((token) => token.address === tokenAddress);
+}
+
+export function isValidEmail(email: string) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
+ * Adds a new customer by sending their information to the server.
+ *
+ * @param vendorAddress - The address of the vendor associated with the customer.
+ * @param customerAddress - The address of the customer to be added.
+ * @param email - (Optional) The email address of the customer. If provided and valid, it will be included in the customer information.
+ * @returns A promise that resolves when the customer has been added.
+ */
+export async function addNewCustomer(vendorAddress: string, customerAddress: string, email?: string) {
+  const customerInfo = {
+    vendorAddress,
+    address: customerAddress,
+  };
+
+  if (email && email.trim() !== "" && isValidEmail(email)) {
+    Object.assign(customerInfo, { email });
+  }
+
+  await fetch(`/api/customer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(customerInfo),
+  });
+}
+
+export async function addNewTransaction(transaction: Partial<Transaction>) {
+  await fetch(`/api/transaction`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ body: transaction }),
+  });
+}
+
+export function fixedNumber(num: number, decimals: number) {
+  // Convert to string with fixed decimals without extra 0s in the end
+  const parts = num.toFixed(decimals).split(".");
+  if (parts.length === 1) return parts[0]; // No decimal part
+  parts[1] = parts[1].replace(/0+$/, ""); // Remove trailing zeros
+  if (parts[1] === "") return parts[0]; // If no decimal part left, return integer part only
+  return parts.join(".");
+}
+
+export function createCallbackUrl(baseUrl: string, params: Record<string, string | number | boolean>) {
+  const url = new URL(baseUrl);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.append(key, value.toString());
+  });
+  return url.toString();
 }

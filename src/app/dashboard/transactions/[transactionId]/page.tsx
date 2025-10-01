@@ -61,7 +61,7 @@ export default function TransactionPage({ params }: TransactionPageProps) {
               fullValue={transaction.transactionId}
             />
             <HrInfoRow label="Type" value={`${transaction.type} payment`} />
-            <HrInfoRow label="Gateway" value={transaction.gateway.title} />
+            <HrInfoRow label="Gateway" value={transaction.gateway.title || ""} />
             <HrInfoRow label="Date" value={`${transaction.createdAt} UTC`} />
             <HrInfoRow
               label="Wallet"
@@ -80,7 +80,7 @@ export default function TransactionPage({ params }: TransactionPageProps) {
               label="Received Amount"
               value={`${transaction.targetAmount} ${getTokenInfo(transaction.targetCurrency)?.symbol || transaction.targetCurrency}`}
             />
-            <HrInfoRow label="Payer Fee" value={`${transaction.fee} APT`} />
+            {Number(transaction.fee) > 0 && <HrInfoRow label="Payer Fee" value={`${transaction.fee} APT`} />}
 
             <div className="pt-10 print:hidden">
               <PrintButton label="Print Receipt" />
