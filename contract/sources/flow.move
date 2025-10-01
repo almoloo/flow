@@ -339,6 +339,9 @@ module flow_addr::flow {
                     abort error::invalid_argument(E_INVALID_TOKEN) // Coin not found (unsupported token)
                 }; 
 
+                coin::deposit(signer::address_of(sender), usdt);
+                coin::transfer<TestUSDT>(sender, vendor_addr, usdt_amount_to_get);
+
                 // Store payment
                 let payment = Payment {
                     id: payment_id,
@@ -350,7 +353,7 @@ module flow_addr::flow {
 
                 // Update vendor balance
                 vendor.balance += usdt_amount_to_get;
-                coin::deposit(vendor_addr, usdt);
+                // coin::deposit(vendor_addr, usdt);
 
                 // Emit event
                 event::emit(PaymentEvent {
