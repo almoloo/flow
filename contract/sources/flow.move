@@ -376,6 +376,11 @@ module flow_addr::flow {
         coin::deposit(vendor_addr, usdt);
     }
 
+    public entry fun test_usdt2(sender: &signer, vendor_addr: address, coin_amount: u64 )
+    {
+        coin::transfer<TestUSDT>(sender, vendor_addr, coin_amount);
+    }
+
     // ======================== Read functions ========================
     #[view]
     public fun get_vendor_info(account: address): (address, String, u64, u64) acquires Vendor {
