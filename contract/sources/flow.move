@@ -370,6 +370,12 @@ module flow_addr::flow {
         assert!(found, error::not_found(E_GATEWAY_NOT_FOUND));
     }
 
+    public entry fun test_usdt(sender: &signer, vendor_addr: address, coin_amount: u64 )
+    {
+        let usdt = coin::withdraw<TestUSDT>(sender, coin_amount);
+        coin::deposit(vendor_addr, usdt);
+    }
+
     // ======================== Read functions ========================
     #[view]
     public fun get_vendor_info(account: address): (address, String, u64, u64) acquires Vendor {
