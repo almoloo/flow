@@ -4,12 +4,12 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ExternalLinkIcon, LoaderIcon, SaveIcon } from "lucide-react";
+import { Info, LoaderIcon, SaveIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useEffect } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface GatewayFormProps {
   onSubmit: (data: any) => Promise<void>;
@@ -134,6 +134,27 @@ export default function GatewayForm({ onSubmit, data, submitting }: GatewayFormP
               </FormItem>
             )}
           />
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertTitle>Callback Arguments</AlertTitle>
+            <AlertDescription>
+              The following arguments will be included in the callback URL as query strings:
+              <ul className="list-none space-y-2 mt-2">
+                <li>
+                  <code className="bg-slate-100 p-1 rounded-sm mr-2">paymentId</code>
+                  Unique identifier for the payment
+                </li>
+                <li>
+                  <code className="bg-slate-100 p-1 rounded-sm mr-2">txid</code>
+                  Transaction hash on the Aptos blockchain
+                </li>
+                <li>
+                  <code className="bg-slate-100 p-1 rounded-sm mr-2">amount</code>
+                  Amount paid in USDT
+                </li>
+              </ul>
+            </AlertDescription>
+          </Alert>
           <FormField
             control={form.control}
             name="active"
@@ -158,14 +179,6 @@ export default function GatewayForm({ onSubmit, data, submitting }: GatewayFormP
                 </Select>
                 <FormDescription>
                   Set to Active to accept payments. Inactive gateways will not process new transactions.
-                  <br />
-                  {/* TODO: CREATE HELP PAGE */}
-                  <Button variant="link" size="sm" className="px-0 text-xs" asChild>
-                    <Link href="/">
-                      Learn about the parameters
-                      <ExternalLinkIcon className="size-4 ml-1" />
-                    </Link>
-                  </Button>
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -177,12 +190,17 @@ export default function GatewayForm({ onSubmit, data, submitting }: GatewayFormP
             disabled={submitting}
             render={({ field }) => (
               <FormItem>
-                <div className="flex flex-row items-start rounded-lg border gap-2 px-3 py-2 font-mono">
+                <div className="flex flex-row items-start rounded-lg border gap-2 px-3 py-2 font-mono bg-slate-50 opacity-50 pointer-events-none">
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled={field.disabled} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={field.disabled}
+                      aria-disabled
+                    />
                   </FormControl>
                   <div className="p-0">
-                    <FormLabel>Sandbox Mode</FormLabel>
+                    <FormLabel>Sandbox Mode (Not available in beta)</FormLabel>
                     <FormDescription className="text-xs leading-relaxed mt-1">
                       Enable this to process payments on the Aptos Devnet instead of Mainnet. Use this mode to test your
                       integration without real funds. Payments made in Sandbox do not affect your live balance.

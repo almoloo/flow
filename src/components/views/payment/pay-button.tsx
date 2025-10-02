@@ -30,6 +30,14 @@ interface PayButtonProps {
   loadingPrices?: boolean;
 }
 
+function LoadingButton() {
+  return (
+    <div>
+      <Skeleton className="w-full h-10" />
+    </div>
+  );
+}
+
 export default function PayButton({
   amount,
   sourceAmount,
@@ -60,7 +68,6 @@ export default function PayButton({
       if (connected && account && !tokens) {
         const client = aptosClient();
         const tokens = await client.getAccountCoinsData({ accountAddress: account.address.toString() });
-        console.log("raw coins", tokens);
         const formattedTokens: AvailableToken[] = tokens.map((token) => {
           const decimals = token.metadata?.decimals || 0;
           const amount = BigInt(token.amount);
@@ -107,12 +114,30 @@ export default function PayButton({
     }
     fetchTokens();
   }, [connected, tokens, account]);
-  if (isLoading || !tokens) {
+
+  if (isLoading) {
+    return <LoadingButton />;
+  }
+
+  if (!connected) {
     return (
       <div>
-        <Skeleton className="w-full h-10" />
+        <p className="text-center text-sm text-slate-500 mb-5">Connect your wallet to proceed with payment.</p>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="w-full">
+              <WalletIcon className="size-4 mr-2" />
+              Connect Wallet
+            </Button>
+          </DialogTrigger>
+          <ConnectWalletDialog />
+        </Dialog>
       </div>
     );
+  }
+
+  if (!tokens) {
+    return <LoadingButton />;
   }
 
   if (connected) {
@@ -156,23 +181,6 @@ export default function PayButton({
         <Button className="w-full" disabled={!sourceToken || !amount || loadingPrices} onClick={handlePayment}>
           {buttonText}
         </Button>
-      </div>
-    );
-  }
-
-  if (!connected) {
-    return (
-      <div>
-        <p className="text-center text-sm text-slate-500 mb-5">Connect your wallet to proceed with payment.</p>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="w-full">
-              <WalletIcon className="size-4 mr-2" />
-              Connect Wallet
-            </Button>
-          </DialogTrigger>
-          <ConnectWalletDialog />
-        </Dialog>
       </div>
     );
   }

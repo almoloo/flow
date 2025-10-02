@@ -60,7 +60,7 @@ export interface CustomerInfo extends Customer {
   totalSpent: string;
 }
 
-export interface Withdrawal {}
+// export interface Withdrawal {}
 
 export interface Question {
   questionId: string;
@@ -90,7 +90,24 @@ export interface ChatMessage {
   content: string;
 }
 
-export interface Invoice {}
+export enum InvoiceStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
+}
+
+export interface Invoice {
+  id: string;
+  vendorAddress: string;
+  amount: string;
+  customerEmail?: string;
+  createDate: string;
+  paymentDate?: string;
+  customer?: Partial<Customer>;
+  paymentId?: number;
+  transactionId?: string;
+  status: InvoiceStatus;
+  transaction?: Partial<Transaction>;
+}
 
 export interface ShortLink {
   id: string;
@@ -100,7 +117,19 @@ export interface ShortLink {
   active: "true" | "false";
 }
 
-export interface Notification {}
+enum NotificationTitle {
+  INVOICE_PAID = "Invoice Paid",
+  PAYMENT_RECEIVED = "Payment Received",
+}
+
+export interface Notification {
+  id: string;
+  walletAddress: string;
+  title: NotificationTitle;
+  message: string;
+  createdAt: string;
+  read: boolean;
+}
 
 export interface Token {
   name: string;

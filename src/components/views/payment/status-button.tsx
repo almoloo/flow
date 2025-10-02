@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 interface StatusButtonProps {
   status: "initial" | "success" | "failed";
-  callbackUrl: string;
+  callbackUrl: string | null;
 }
 
 export default function StatusButton({ status, callbackUrl }: StatusButtonProps) {
@@ -13,7 +13,7 @@ export default function StatusButton({ status, callbackUrl }: StatusButtonProps)
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "success") {
+    if (status === "success" && callbackUrl) {
       const timer = setInterval(() => {
         setRemainingTime((prev) => {
           if (prev <= 1) {
@@ -39,7 +39,7 @@ export default function StatusButton({ status, callbackUrl }: StatusButtonProps)
             </p>
           </div>
           <Button variant="green" size="lg" asChild>
-            <Link href={callbackUrl}>Complete Transaction ({remainingTime})</Link>
+            <Link href={callbackUrl || "#"}>Complete Transaction ({remainingTime})</Link>
           </Button>
         </>
       ) : status === "failed" ? (

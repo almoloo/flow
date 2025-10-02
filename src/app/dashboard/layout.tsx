@@ -11,9 +11,11 @@ import LoadingLayout from "@/components/views/dashboard/loading-layout";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { FingerprintIcon } from "lucide-react";
+import { authenticatedGet } from "@/lib/authenticatedFetch";
+import { Notification } from "@/types";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { connected, isLoading: loadingWallet } = useWallet();
+  const { connected, isLoading: loadingWallet, account } = useWallet();
   const { isAuthenticated, authenticate, loading: loadingAuth } = useAuth();
   const { loading: loadingVendor, vendor, done: vendorDone } = useVendorInfo();
   const currentPath = usePathname();
@@ -21,6 +23,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isLoading, setIsLoading] = useState(true);
   const [isInit, setIsInit] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(false);
 
   if (!connected && !loadingWallet) {
     redirect("/");
@@ -53,9 +56,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [isLoading, vendor]);
 
+  useEffect(() => {
+    if (connected && account && isAuthenticated) {
+      async function fetchNotifications() {
+        try {
+          const notifications = await authenticatedGet("/api/notification");
+          const jsonNotifications = (await notifications.json()) as Notification[];
+          const unreadCount = jsonNotifications.filter((n) => !n.read).length;
+          if (unreadCount > 0) {
+            setUnreadNotifications(true);
+          }
+        } catch (error) {
+          console.error("Error fetching notifications:", error);
+        }
+      }
+      fetchNotifications();
+    }
+  }, [connected, account, isAuthenticated]);
+
   return (
     <>
-      <DashboardHeader />
+      <DashboardHeader unreadNotifications={unreadNotifications} />
       <div className="grow flex flex-col lg:grid lg:grid-cols-12 mx-5 lg:mx-10 gap-5 lg:gap-10 py-5">
         {isLoading ? (
           <LoadingLayout />

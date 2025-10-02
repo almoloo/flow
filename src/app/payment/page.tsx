@@ -140,16 +140,30 @@ export default function PaymentPage() {
         // PAY WITH APT
         tx = await client?.useABI(FLOW_ABI).pay_to_vendor_apt({
           type_arguments: [],
-          arguments: [vendorAddress as `0x${string}`, BigInt(gatewayId), BigInt(paymentId), BigInt(sourceAmount * 100)],
+          arguments: [
+            vendorAddress as `0x${string}`,
+            BigInt(gatewayId),
+            BigInt(paymentId),
+            Math.floor(sourceAmount * Math.pow(10, sourceToken.decimals || 8)),
+          ],
         });
         console.log("Pay APT tx:", tx);
-      } else if (sourceToken.address === tetherInfo?.address) {
-        // PAY WITH USDT
-        tx = await client?.useABI(FLOW_ABI).pay_to_vendor({
-          type_arguments: [],
-          arguments: [vendorAddress as `0x${string}`, BigInt(gatewayId), BigInt(paymentId), BigInt(sourceAmount)],
-        });
-        console.log("PAY USDT", tx);
+        // } else if (sourceToken.address === tetherInfo?.address) {
+        //   console.log("hereeeeee");
+        //   // PAY WITH USDT
+        //   tx = await client?.useABI(FLOW_ABI).test_usdt2({
+        //     type_arguments: [],
+        //     arguments: [vendorAddress as `0x${string}`, BigInt(sourceAmount)],
+        //   });
+        //   console.log("PAY USDT", tx);
+        // } else if (sourceToken.address === tetherInfo?.address) {
+        //   // PAY WITH USDT
+        //   tx = await client?.useABI(FLOW_ABI).pay_to_vendor({
+        //     type_arguments: [],
+        //     arguments: [vendorAddress as `0x${string}`, BigInt(gatewayId), BigInt(paymentId), BigInt(sourceAmount)],
+        //   });
+        //   console.log("PAY USDT", tx);
+        // } else {
       } else {
         // PAY WITH TOKEN
         tx = await client?.useABI(FLOW_ABI).pay_to_vendor_token({
@@ -159,7 +173,9 @@ export default function PaymentPage() {
             BigInt(gatewayId),
             BigInt(paymentId),
             sourceToken.symbol,
-            Math.floor(sourceAmount * Math.pow(10, sourceToken.decimals || 8)),
+            sourceToken.address === tetherInfo?.address
+              ? sourceAmount
+              : Math.floor(sourceAmount * Math.pow(10, sourceToken.decimals || 8)),
           ],
         });
         console.log("PAY TOKEN", tx);
@@ -216,11 +232,15 @@ export default function PaymentPage() {
       ) : (
         <StatusButton
           status={status}
-          callbackUrl={createCallbackUrl(gateway?.callbackUrl!, {
-            paymentId,
-            txid: txid!,
-            amount,
-          })}
+          callbackUrl={
+            status === "success"
+              ? createCallbackUrl(gateway?.callbackUrl!, {
+                  paymentId,
+                  txid: txid!,
+                  amount,
+                })
+              : null
+          }
         />
       )}
     </div>

@@ -44,7 +44,6 @@ async function handleGET(_req: NextRequest, _ctx: any, authPayload: any) {
   transactions.forEach((tx) => {
     const gateway = gateways.find((g) => g.gatewayId === tx.gateway.gatewayId);
     if (gateway) {
-      console.log("Found gateway for transaction:", tx.transactionId, gateway);
       tx.gateway = gateway;
     }
     tx.createdAt = new Date(tx.createdAt).toLocaleString("en-US", { timeZone: "UTC" });

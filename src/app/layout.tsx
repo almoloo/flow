@@ -9,9 +9,9 @@ import "./globals.css";
 import Providers from "@/lib/providers";
 
 export const metadata: Metadata = {
-  applicationName: "Aptos Boilerplate Template",
-  title: "NextJS Boilerplate Template",
-  description: "Aptos Boilerplate Template",
+  applicationName: "Flow",
+  title: "Flow",
+  description: "Flow - Payment gateway on Aptos",
   manifest: "/manifest.json",
 };
 
