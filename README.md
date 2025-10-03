@@ -51,24 +51,6 @@
 
 ---
 
-## 🏗️ Architecture
-
-Flow combines blockchain technology with modern web development to create a seamless payment experience:
-
-```mermaid
-graph TD
-    A[Customer] --> B[Payment Interface]
-    B --> C[Token Selection]
-    C --> D[Liquidswap DEX]
-    D --> E[USDT Conversion]
-    E --> F[Vendor Wallet]
-    F --> G[Dashboard Analytics]
-
-    H[AI Agent] --> B
-    I[MongoDB] --> G
-    J[MinIO Storage] --> G
-```
-
 ### 🛠️ Tech Stack
 
 **Frontend**
