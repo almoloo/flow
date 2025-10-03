@@ -9,7 +9,7 @@
   [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
   [![Built on Aptos](https://img.shields.io/badge/⚡_Built_on-Aptos-000000?style=for-the-badge)](https://aptosfoundation.org/)
   
-  ![Flow Preview](https://via.placeholder.com/800x400/8B5CF6/FFFFFF?text=Flow+Payment+Gateway+Interface)
+  ![Flow Preview](/readme/hero.png)
   
 </div>
 
@@ -30,7 +30,7 @@
 - 👥 **Customer Management** - Track customers and transaction history
 - 📊 **Analytics Dashboard** - Comprehensive transaction insights
 
-![Payment Flow](https://via.placeholder.com/800x300/8B5CF6/FFFFFF?text=Customer+Pays+Any+Token+→+Flow+Converts+→+Vendor+Receives+USDT)
+![Payment Flow](/readme/gateway.png)
 
 ---
 
