@@ -156,3 +156,23 @@ export function createCallbackUrl(baseUrl: string, params: Record<string, string
   });
   return url.toString();
 }
+
+export async function sendNotification(title: string, message: string, to: string) {
+  await fetch(`/api/notification`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, message, walletAddress: to }),
+  });
+}
+
+export async function setInvoicePaid(invoiceId: string, paymentId: number, transactionId: string) {
+  await fetch(`/api/invoice/${invoiceId}/mark-paid`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ paymentId, transactionId }),
+  });
+}

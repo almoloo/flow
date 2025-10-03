@@ -11,7 +11,7 @@ import { useWalletClient } from "@thalalabs/surf/hooks";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { availableTokens, NETWORK } from "@/constants";
 import { aptosClient } from "@/utils/aptosClient";
-import { addNewCustomer, addNewTransaction } from "@/lib/utils";
+import { addNewCustomer, addNewTransaction, sendNotification, setInvoicePaid } from "@/lib/utils";
 
 interface InvoicePaymentPageProps {
   params: {
@@ -160,6 +160,12 @@ export default function InvoicePaymentPage({ params }: InvoicePaymentPageProps) 
     } finally {
       setIsLoading(false);
       await addNewTransaction(transaction);
+      await setInvoicePaid(invoiceId, paymentId, transaction.transactionId || "");
+      await sendNotification(
+        "New Invoice Payment",
+        `You have received a new payment for invoice ${invoice?.id || ""}.`,
+        vendorAddress!.toLowerCase(),
+      );
     }
   }
 
