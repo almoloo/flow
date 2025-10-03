@@ -4,7 +4,7 @@ import PayButton from "@/components/views/payment/pay-button";
 import PaymentInfo from "@/components/views/payment/payment-info";
 import { Token, Transaction, TransactionStatus, TransactionType } from "@/types";
 import { LoaderIcon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { FLOW_ABI } from "@/utils/flow_abi";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "@thalalabs/surf/hooks";
@@ -27,7 +27,7 @@ export default function PaymentPage() {
 
   useEffect(() => {
     if (!vendorAddress || !gatewayId || !amount) {
-      router.replace("/404");
+      notFound();
     }
   }, [vendorAddress, gatewayId, amount, router]);
 
@@ -111,7 +111,7 @@ export default function PaymentPage() {
     // const reg = await client?.useABI(FLOW_ABI).register_vendor({ type_arguments: [], arguments: [] });
     // console.log("Register vendor tx:", reg);
 
-    const aptosAddress = availableTokens[NETWORK].find((t) => t.symbol === "APT")?.address;
+    // const aptosAddress = availableTokens[NETWORK].find((t) => t.symbol === "APT")?.address;
     const tetherInfo = availableTokens[NETWORK].find((t) => t.symbol === "USDT");
 
     let transaction: Partial<Transaction> = {
@@ -136,50 +136,50 @@ export default function PaymentPage() {
       setIsLoading(true);
       let tx;
 
-      if (sourceToken.address === aptosAddress) {
-        // PAY WITH APT
-        tx = await client?.useABI(FLOW_ABI).pay_to_vendor_apt({
-          type_arguments: [],
-          arguments: [
-            vendorAddress as `0x${string}`,
-            BigInt(gatewayId),
-            BigInt(paymentId),
-            Math.floor(sourceAmount * Math.pow(10, sourceToken.decimals || 8)),
-          ],
-        });
-        console.log("Pay APT tx:", tx);
-        // } else if (sourceToken.address === tetherInfo?.address) {
-        //   console.log("hereeeeee");
-        //   // PAY WITH USDT
-        //   tx = await client?.useABI(FLOW_ABI).test_usdt2({
-        //     type_arguments: [],
-        //     arguments: [vendorAddress as `0x${string}`, BigInt(sourceAmount)],
-        //   });
-        //   console.log("PAY USDT", tx);
-        // } else if (sourceToken.address === tetherInfo?.address) {
-        //   // PAY WITH USDT
-        //   tx = await client?.useABI(FLOW_ABI).pay_to_vendor({
-        //     type_arguments: [],
-        //     arguments: [vendorAddress as `0x${string}`, BigInt(gatewayId), BigInt(paymentId), BigInt(sourceAmount)],
-        //   });
-        //   console.log("PAY USDT", tx);
-        // } else {
-      } else {
-        // PAY WITH TOKEN
-        tx = await client?.useABI(FLOW_ABI).pay_to_vendor_token({
-          type_arguments: [],
-          arguments: [
-            vendorAddress as `0x${string}`,
-            BigInt(gatewayId),
-            BigInt(paymentId),
-            sourceToken.symbol,
-            sourceToken.address === tetherInfo?.address
-              ? sourceAmount
-              : Math.floor(sourceAmount * Math.pow(10, sourceToken.decimals || 8)),
-          ],
-        });
-        console.log("PAY TOKEN", tx);
-      }
+      // if (sourceToken.address === aptosAddress) {
+      // PAY WITH APT
+      // tx = await client?.useABI(FLOW_ABI).pay_to_vendor_apt({
+      //   type_arguments: [],
+      //   arguments: [
+      //     vendorAddress as `0x${string}`,
+      //     BigInt(gatewayId),
+      //     BigInt(paymentId),
+      //     Math.floor(sourceAmount * Math.pow(10, sourceToken.decimals || 8)),
+      //   ],
+      // });
+      // console.log("Pay APT tx:", tx);
+      // } else if (sourceToken.address === tetherInfo?.address) {
+      //   console.log("hereeeeee");
+      //   // PAY WITH USDT
+      //   tx = await client?.useABI(FLOW_ABI).test_usdt2({
+      //     type_arguments: [],
+      //     arguments: [vendorAddress as `0x${string}`, BigInt(sourceAmount)],
+      //   });
+      //   console.log("PAY USDT", tx);
+      // } else if (sourceToken.address === tetherInfo?.address) {
+      //   // PAY WITH USDT
+      //   tx = await client?.useABI(FLOW_ABI).pay_to_vendor({
+      //     type_arguments: [],
+      //     arguments: [vendorAddress as `0x${string}`, BigInt(gatewayId), BigInt(paymentId), BigInt(sourceAmount)],
+      //   });
+      //   console.log("PAY USDT", tx);
+      // } else {
+      // } else {
+      // PAY WITH TOKEN
+      tx = await client?.useABI(FLOW_ABI).pay_to_vendor_token({
+        type_arguments: [],
+        arguments: [
+          vendorAddress as `0x${string}`,
+          BigInt(gatewayId),
+          BigInt(paymentId),
+          sourceToken.symbol,
+          sourceToken.address === tetherInfo?.address
+            ? sourceAmount
+            : Math.floor(sourceAmount * Math.pow(10, sourceToken.decimals || 8)),
+        ],
+      });
+      console.log("PAY TOKEN", tx);
+      // }
 
       await aptosClient().waitForTransaction({
         transactionHash: tx!.hash,

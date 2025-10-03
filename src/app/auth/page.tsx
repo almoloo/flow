@@ -44,10 +44,10 @@ export default function AuthPage() {
   }, [connected, isAuthenticated, loadingAuth]);
 
   useEffect(() => {
-    if (connected && account && isAuthenticated) {
+    if (connected && isAuthenticated) {
       redirect("/dashboard");
     }
-  }, [connected, account]);
+  }, [connected, isAuthenticated]);
 
   return (
     <div className="bg-slate-100 min-h-screen flex justify-center items-center">

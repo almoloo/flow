@@ -17,6 +17,7 @@ import { aptosClient } from "@/utils/aptosClient";
 import { useToast } from "@/components/ui/use-toast";
 import { uploadVendorAvatar } from "@/lib/utils";
 import { authenticatedPost } from "@/lib/authenticatedFetch";
+import { redirect } from "next/navigation";
 
 const profileSchema = z.object({
   name: z
@@ -120,6 +121,7 @@ export default function ProfilePage() {
         description: "Your profile has been updated successfully.",
         duration: 5000,
       });
+      redirect("/dashboard");
     } catch (error) {
       console.error("Error:", error);
       toast({

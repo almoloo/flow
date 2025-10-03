@@ -6,14 +6,12 @@ import { useEffect, useState } from "react";
 import EmptyTransactions from "./empty-transactions";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import TxRow from "../transaction/tx-row";
-import { useToast } from "@/components/ui/use-toast";
 import TxRowLoading from "../transaction/tx-row-loading";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "lucide-react";
 
 export default function TransactionsBox() {
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
@@ -24,11 +22,6 @@ export default function TransactionsBox() {
       setTransactions(txData);
     } catch (error) {
       console.error("Error fetching transactions:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch transactions. Please try again later.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }

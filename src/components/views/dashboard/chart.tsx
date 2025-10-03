@@ -1,14 +1,12 @@
 "use client";
 
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { useToast } from "@/components/ui/use-toast";
 import { authenticatedGet } from "@/lib/authenticatedFetch";
 import { Transaction } from "@/types";
 import { useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 export default function DashboardChart() {
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [chartData, setChartData] = useState<{ month: string; amount: number }[]>([]);
@@ -20,11 +18,6 @@ export default function DashboardChart() {
       setTransactions(txData);
     } catch (error) {
       console.error("Error fetching transactions:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch transactions. Please try again later.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }

@@ -42,24 +42,12 @@ export function useVendorInfo() {
   });
 
   const fetchVendorInfo = useCallback(async () => {
-    // if (!account?.address || !connected) {
-    //   setVendorInfo({
-    //     vendor: null,
-    //     loading: false,
-    //     error: null,
-    //     done: true,
-    //   });
-    //   return;
-    // }
-
-    // setVendorInfo((prev) => ({ ...prev, loading: true, error: null }));
     if (account?.address && connected) {
       try {
         const vendorInfo = await getVendorInfo(account.address.toString());
 
         if (!vendorInfo) {
-          // throw new Error("Vendor name not found");
-          return;
+          throw new Error("Vendor name not found");
         }
 
         setVendorInfo({

@@ -51,10 +51,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     if (!isLoading && vendor) {
       setIsInit(true);
-    } else if (!isLoading && !vendor && currentPath !== "/dashboard/profile") {
+    }
+    if (!isLoading && !vendor && vendorDone && currentPath !== "/dashboard/profile") {
       redirect("/dashboard/profile");
     }
-  }, [isLoading, vendor]);
+  }, [isLoading, loadingVendor, vendor, vendorDone]);
 
   useEffect(() => {
     if (connected && account && isAuthenticated) {

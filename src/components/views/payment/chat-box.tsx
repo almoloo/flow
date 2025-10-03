@@ -12,7 +12,8 @@ export default function ChatBox() {
   const searchParams = useSearchParams();
   const va = searchParams.get("va");
   const gid = searchParams.get("gid");
-  const { gateway, loading, error, done } = useGatewayInfo(va!, gid!);
+  const { gateway, loading, error, done } =
+    va && gid ? useGatewayInfo(va!, gid!) : { gateway: null, loading: false, error: null, done: false };
 
   const [cardMode] = useState<"horizontal" | "vertical">("vertical");
   const [isInitializing, setIsInitializing] = useState(false);

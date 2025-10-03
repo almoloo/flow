@@ -12,7 +12,7 @@ interface InvoiceShareBoxProps {
 export default function InvoiceShareBox({ invoiceId }: InvoiceShareBoxProps) {
   const { toast } = useToast();
 
-  const url = `${process.env.NEXT_PUBLIC_URL}/i/${invoiceId}`;
+  const url = `${process.env.NEXT_PUBLIC_URL}/payment/i/${invoiceId}`;
 
   function copyAddress() {
     navigator.clipboard.writeText(url).then(() => {
