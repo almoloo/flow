@@ -38,6 +38,8 @@
 
 **🌐 [Try Flow Payment Gateway](https://flow.almoloo.com)**
 
+**🖌️ [View UI design on Figma](https://www.figma.com/design/JZYe6ZUXTihQW0F7Yp7lZb/Payment-Gateway?node-id=2443-5934&t=VJKijxi4elCUF5xV-1)**
+
 **📍 Contract Address:** `0x79df95a22ef10e02273b3e75a195fa3416f1993ae150a2b1b993bb27fe3171bb`
 
 ### Demo Scenarios
