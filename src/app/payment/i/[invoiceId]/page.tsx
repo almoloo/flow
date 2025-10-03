@@ -4,7 +4,7 @@ import PayButton from "@/components/views/payment/pay-button";
 import PaymentInfo from "@/components/views/payment/payment-info";
 import { Invoice, Token, Transaction, TransactionStatus, TransactionType } from "@/types";
 import { LoaderIcon } from "lucide-react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { FLOW_ABI } from "@/utils/flow_abi";
 import { useEffect, useState } from "react";
 import { useWalletClient } from "@thalalabs/surf/hooks";
@@ -12,7 +12,6 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { availableTokens, NETWORK } from "@/constants";
 import { aptosClient } from "@/utils/aptosClient";
 import { addNewCustomer, addNewTransaction } from "@/lib/utils";
-import { useToast } from "@/components/ui/use-toast";
 
 interface InvoicePaymentPageProps {
   params: {
@@ -23,8 +22,6 @@ interface InvoicePaymentPageProps {
 export default function InvoicePaymentPage({ params }: InvoicePaymentPageProps) {
   const { connected, account } = useWallet();
   const { client } = useWalletClient();
-  const { toast } = useToast();
-  const router = useRouter();
 
   const { invoiceId } = params;
 
